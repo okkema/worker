@@ -1,5 +1,3 @@
-import { router } from "./router"
+import { Worker } from "./core/worker";
 
-addEventListener("fetch", (event) => {
-  event.respondWith(router.handle(event.request))
-})
+Worker()

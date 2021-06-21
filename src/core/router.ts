@@ -1,6 +1,6 @@
 import { Router } from "itty-router";
-import { Ok } from "./core/responses";
+import { Ok } from "./responses";
 
 export const router = Router()
 
-router.get("/", () => Ok())
+router.get("/", ({url}) => Ok(url))
