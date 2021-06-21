@@ -1,7 +1,7 @@
 module.exports = {
   transform: {
-    '^.+\\.(t|j)sx?$': 'ts-jest',
+    "^.+\\.(t|j)sx?$": "ts-jest",
   },
-  collectCoverageFrom: ['src/**/*.{ts,js}'],
-  setupFilesAfterEnv: ["<rootDir>/scripts/jest-setup.ts"]
+  collectCoverageFrom: ["src/**/*.{ts,js}"],
+  setupFilesAfterEnv: ["<rootDir>/scripts/jest-setup.ts"],
 }
