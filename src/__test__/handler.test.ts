@@ -1,4 +1,4 @@
-import { handleRequest } from '../src/handler'
+import { handleRequest } from '../handler'
 import makeServiceWorkerEnv from 'service-worker-mock'
 
 declare const global: unknown
