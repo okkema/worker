@@ -14,7 +14,7 @@ describe("worker", () => {
     const request = new Request("/")
     const event = new FetchEvent("fetch", { request })
     worker.handle(event)
-    expect(handler).toHaveBeenCalledWith(request)
+    expect(handler).toHaveBeenCalledWith(event)
   })
   it("should call the logger if present", async () => {
     const error = new Error()
@@ -26,7 +26,7 @@ describe("worker", () => {
     const request = new Request("/")
     const event = new FetchEvent("fetch", { request })
     worker.handle(event)
-    expect(handler).toHaveBeenCalledWith(request)
-    expect(logger).toHaveBeenCalledWith(error)
+    expect(handler).toHaveBeenCalledWith(event)
+    expect(logger).toHaveBeenCalledWith(event, error)
   })
 })
