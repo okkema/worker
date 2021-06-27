@@ -1,4 +1,4 @@
 import { router } from "./routes"
 import { Worker } from "./core/worker"
 
-Worker(router.handle).listen()
+Worker({ handler: router.handle })
