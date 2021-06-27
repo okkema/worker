@@ -1,14 +1,22 @@
-import supertest from "supertest"
-import {createTestApp} from "cloudflare-worker-local"
-import fs from "fs"
-import path from "path"
+import { Worker } from "../worker"
 
-const worker = fs.readFileSync(path.join(__dirname, "../../../dist/worker.js"))
+declare const global: unknown
 
 describe("worker", () => {
-  it("should respond to a fetch event", async () => {
-    await supertest(createTestApp(worker, null))
-      .get("/")
-      .expect(200)
+  beforeEach(() => {
+    Object.assign(global, { addEventListener: jest.fn() })
+  })
+  it("should listen for a fetch event", () => {
+    const worker = Worker(jest.fn())
+    worker.listen()
+    expect(addEventListener).toBeCalledWith("fetch", worker.eventHandler)
+  })
+  it("should handle the event request", async () => {
+    const handler = jest.fn()
+    const worker = Worker(handler)
+    const request = new Request("/")
+    const event = new FetchEvent("fetch", { request })
+    worker.eventHandler(event)
+    expect(handler).toHaveBeenCalledWith(request)
   })
 })

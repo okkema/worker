@@ -1,3 +1,4 @@
-import { Worker } from "./core/worker";
+import { router } from "./routes"
+import { Worker } from "./core/worker"
 
-Worker()
+Worker(router.handle).listen()
