@@ -5,7 +5,7 @@
   "main": "dist/worker.js",
   "scripts": {
     "develop": "npm-run-all build start",
-    "start": "cloudflare-worker-local dist/worker.js localhost:3000 3000",
+    "start": "cloudflare-worker-local dist/worker.js localhost:3000 3000 ./wrangler.toml",
     "build": "webpack",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}'",
     "lint": "eslint --max-warnings=0 src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}'",

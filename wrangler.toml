@@ -1,11 +1,15 @@
-name = "worker-typescript-template"
+name = "spider"
 type = "javascript"
 zone_id = ""
 account_id = ""
 route = ""
-workers_dev = true
+workers_dev = false
 
 [build]
 command = "npm install && npm run build"
+
 [build.upload]
 format = "service-worker"
+
+[secrets]
+DSN = "http://localhost"

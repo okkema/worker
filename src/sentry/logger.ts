@@ -2,7 +2,7 @@ import { uuid } from "../core/uuid"
 
 export const Logger = (options: {
   DSN: string
-}): { log: (event: FetchEvent, error: Error) => void } => {
+}): { log: (event: FetchEvent, error: Error) => Promise<boolean> } => {
   const { DSN } = options
   const { origin, pathname, username } = new URL(DSN)
   const client = "spider"
