@@ -1,4 +1,4 @@
-import { router } from "./routes"
+import { handler } from "./routes"
 import { Worker } from "./core/worker"
 
-Worker({ handler: router.handle })
+Worker({ handler: handler })

@@ -3,7 +3,7 @@ import { InternalServerError } from "./responses"
 export const Worker = (options: {
   handler: (event: FetchEvent) => Promise<Response>
   logger?: (event: FetchEvent, error: Error) => Promise<boolean>
-}): { handle: (event: FetchEvent) => void } => {
+}): { handle: (event: FetchEvent) => Promise<Response> } => {
   const { handler, logger } = options
 
   const handleError = async (event: FetchEvent, error: Error) => {
@@ -18,10 +18,12 @@ export const Worker = (options: {
     } catch (error) {
       response = await handleError(event, error)
     }
-    event.respondWith(response)
+    return response
   }
 
-  addEventListener("fetch", handleEvent)
+  addEventListener("fetch", (event) => {
+    event.respondWith(handleEvent(event))
+  })
 
   return {
     handle: handleEvent,
