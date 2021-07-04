@@ -14,6 +14,8 @@ describe("/", () => {
     await supertest(createTestApp(worker, null, { env })).get("/").expect(200)
   })
   it("should respond with a 500", async () => {
-    await supertest(createTestApp(worker, null, {env})).get("/error").expect(500)
+    await supertest(createTestApp(worker, null, { env }))
+      .get("/error")
+      .expect(500)
   })
 })

@@ -1,7 +1,7 @@
 import { Logger } from "../logger"
 
 describe("logger", () => {
-  it("should return true oif it successfully logs the error", async () => {
+  it("should return true if it successfully logs the error", async () => {
     Object.assign(global, {
       fetch: jest.fn(() => {
         return { ok: true }
