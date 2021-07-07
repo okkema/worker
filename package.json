@@ -1,7 +1,7 @@
 {
-  "name": "worker-typescript-template",
+  "name": "spider",
   "version": "1.0.0",
-  "description": "Cloudflare worker TypeScript template",
+  "description": "Cloudflare Worker Web Framework",
   "main": "dist/worker.js",
   "scripts": {
     "develop": "npm-run-all build start",
@@ -12,8 +12,8 @@
     "test": "jest",
     "test:verbose": "jest --verbose"
   },
-  "author": "author",
-  "license": "MIT OR Apache-2.0",
+  "author": "Benjamin Okkema <ben@okkema.org>",
+  "license": "MIT",
   "eslintConfig": {
     "root": true,
     "extends": [
