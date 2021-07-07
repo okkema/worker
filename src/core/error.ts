@@ -1,5 +1,5 @@
 export class CoreError extends Error {
-  constructor(message: string = "CoreError") {
+  constructor(message = "CoreError") {
     super(message)
     this.name = this.constructor.name
   }

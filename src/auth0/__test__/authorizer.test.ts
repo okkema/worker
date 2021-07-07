@@ -16,7 +16,7 @@ describe("authorizer", () => {
       Authorization: `Bearer ${token}`,
     })
     const request = new Request("/", { headers })
-    const validator = jest.fn((x) => Promise.resolve(false))
+    const validator = jest.fn(() => Promise.resolve(false))
     const authorizer = Authorizer({ validator })
     const result = (await authorizer.authorize(request)) as Response
     expect(result).toBeInstanceOf(Response)
@@ -29,7 +29,7 @@ describe("authorizer", () => {
       Authorization: `Bearer ${token}`,
     })
     const request = new Request("/", { headers })
-    const validator = jest.fn((x) => Promise.resolve(true))
+    const validator = jest.fn(() => Promise.resolve(true))
     const authorizer = Authorizer({ validator })
     const result = await authorizer.authorize(request)
     expect(result).toBe(undefined)

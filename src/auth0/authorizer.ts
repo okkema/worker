@@ -9,7 +9,7 @@ export const Authorizer = (options: {
 
   const getTokenFromHeaders = (headers: Headers): string | undefined => {
     const header = headers.get("Authorization")
-    return !!header ? header.split(" ")?.[1] : undefined
+    return header ? header.split(" ")?.[1] : undefined
   }
 
   const validateToken = async (token: string): Promise<boolean> => true

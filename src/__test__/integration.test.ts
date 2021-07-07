@@ -1,21 +1,21 @@
-import supertest from "supertest"
-import { createTestApp } from "cloudflare-worker-local"
-import fs from "fs"
-import path from "path"
+import { Miniflare } from "miniflare"
 
-const worker = fs.readFileSync(path.join(__dirname, "../../dist/worker.js"))
-
-const env = {
-  DSN: "http://localhost",
-}
+const HOST = "http://localhost:8787"
+let worker: Miniflare
 
 describe("/", () => {
+  beforeAll(() => {
+    worker = new Miniflare({
+      scriptPath: "dist/worker.js",
+    })
+  })
+
   it("should respond with a 200", async () => {
-    await supertest(createTestApp(worker, null, { env })).get("/").expect(200)
+    const result = await worker.dispatchFetch(`${HOST}/`)
+    expect(result.status).toBe(200)
   })
   it("should respond with a 500", async () => {
-    await supertest(createTestApp(worker, null, { env }))
-      .get("/error")
-      .expect(500)
+    const result = await worker.dispatchFetch(`${HOST}/error`)
+    expect(result.status).toBe(500)
   })
 })
