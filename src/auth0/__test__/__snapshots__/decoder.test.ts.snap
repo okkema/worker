@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`decoder should decode a valid token 1`] = `
+Object {
+  "header": Object {
+    "alg": "HS256",
+    "typ": "JWT",
+  },
+  "payload": Object {
+    "iat": 1516239022,
+    "name": "John Doe",
+    "sub": "1234567890",
+  },
+  "signature": "U2ZsS3h3UkpTTWVLS0YyUVQ0ZndwTWVKZjM2UE9rNnlKVl9hZFFzc3c1Yw==",
+}
+`;

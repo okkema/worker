@@ -10,6 +10,7 @@
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}'",
     "lint": "eslint src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}'",
     "test": "jest",
+    "test:update": "jest --updateSnapshot",
     "test:verbose": "jest --verbose"
   },
   "author": "Benjamin Okkema <ben@okkema.org>",
