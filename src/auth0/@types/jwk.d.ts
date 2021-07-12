@@ -1,4 +1,4 @@
-type JWKS = {
+type JWK = {
   alg: string
   kty: string
   use: string

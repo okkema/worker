@@ -6,7 +6,7 @@ export class Auth0ClientError extends CoreError {
   }
 }
 
-export const fetchJWKS = async (issuer: string): Promise<{ keys: JWKS[] }> => {
+export const fetchJWKS = async (issuer: string): Promise<{ keys: JWK[] }> => {
   const url = new URL(issuer)
   if (!url.pathname.endsWith("/")) url.pathname += "/"
   url.pathname += "./well-known/jwks.json"

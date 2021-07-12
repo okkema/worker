@@ -1,14 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Authorizer } from "../authorizer"
+import { validateToken } from "../validator"
+
+jest.mock("../validator", () => ({
+  validateToken: jest.fn(),
+}))
 
 describe("authorizer", () => {
   it("should return an Unauthorized response when no token is present", async () => {
     const request = new Request("/")
-    const validator = jest.fn()
-    const authorizer = Authorizer({ validator })
+    const audience = "audience"
+    const issuer = "issuer"
+    const authorizer = Authorizer({ audience, issuer })
     const result = (await authorizer.authorize(request)) as Response
     expect(result).toBeInstanceOf(Response)
     expect(result.status).toBe(401)
-    expect(validator).not.toHaveBeenCalled()
+    expect(validateToken).not.toHaveBeenCalled()
   })
   it("should return an Unauthorized response when the token is invalid", async () => {
     const token = "token"
@@ -16,12 +23,19 @@ describe("authorizer", () => {
       Authorization: `Bearer ${token}`,
     })
     const request = new Request("/", { headers })
-    const validator = jest.fn(() => Promise.resolve(false))
-    const authorizer = Authorizer({ validator })
+    const audience = "audience"
+    const issuer = "issuer"
+    const authorizer = Authorizer({ audience, issuer })
+    const mockValidateToken = validateToken as jest.MockedFunction<
+      typeof validateToken
+    >
+    mockValidateToken.mockImplementationOnce((token, audience, issuer) =>
+      Promise.resolve(false),
+    )
     const result = (await authorizer.authorize(request)) as Response
     expect(result).toBeInstanceOf(Response)
     expect(result.status).toBe(401)
-    expect(validator).toHaveBeenCalledWith(token)
+    expect(validateToken).toHaveBeenCalledWith(token, audience, issuer)
   })
   it("should continue if the token is valid", async () => {
     const token = "token"
@@ -29,10 +43,17 @@ describe("authorizer", () => {
       Authorization: `Bearer ${token}`,
     })
     const request = new Request("/", { headers })
-    const validator = jest.fn(() => Promise.resolve(true))
-    const authorizer = Authorizer({ validator })
+    const audience = "audience"
+    const issuer = "issuer"
+    const mockValidateToken = validateToken as jest.MockedFunction<
+      typeof validateToken
+    >
+    mockValidateToken.mockImplementationOnce((token, audience, issuer) =>
+      Promise.resolve(true),
+    )
+    const authorizer = Authorizer({ audience, issuer })
     const result = await authorizer.authorize(request)
     expect(result).toBe(undefined)
-    expect(validator).toHaveBeenCalledWith(token)
+    expect(validateToken).toHaveBeenCalledWith(token, audience, issuer)
   })
 })
