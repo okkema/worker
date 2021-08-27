@@ -1,4 +1,5 @@
-module.exports = {
+/** @type { import("@types/eslint").Linter.Config } */
+const config = {
   env: {
     browser: true,
     es2021: true,
@@ -24,3 +25,5 @@ module.exports = {
   },
   ignorePatterns: ["node_modules", "dist"],
 }
+
+module.exports = config
