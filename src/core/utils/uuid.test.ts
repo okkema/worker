@@ -7,7 +7,7 @@ describe("uuid", () => {
     const result = uuid()
     expect(regex.test(result)).toBe(true)
   })
-  it("not generate the same uuid", () => {
+  it("generates unique uuids", () => {
     const test = []
     for (let i = 0; i < 10000; i++) {
       test.push(uuid())

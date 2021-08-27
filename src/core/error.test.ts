@@ -10,7 +10,6 @@ describe("CoreError", () => {
     expect(result.status).toBe(500)
     expect(result.detail).toBe(CoreError.name)
   })
-
   it("sets the init values", () => {
     const init = {
       detail: "detail",

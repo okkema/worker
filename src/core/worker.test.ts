@@ -9,7 +9,7 @@ describe("worker", () => {
     Worker({ handler: jest.fn() })
     expect(addEventListener).toBeCalledWith("fetch", expect.any(Function))
   })
-  it("handles the event request", async () => {
+  it("calls the handler", async () => {
     const handler = jest.fn()
     const worker = Worker({ handler })
     const request = new Request("/")
@@ -17,7 +17,7 @@ describe("worker", () => {
     worker.handleEvent(event)
     expect(handler).toHaveBeenCalledWith(event)
   })
-  it("responds with a response", async () => {
+  it("responds to an event", async () => {
     const response = new Response()
     const handler = jest.fn(async () => response)
     const worker = Worker({ handler })
@@ -28,7 +28,7 @@ describe("worker", () => {
     expect(handler).toHaveBeenCalledWith(event)
     expect(result).toBe(response)
   })
-  describe("error", () => {
+  describe("on error", () => {
     it("calls the logger if present", async () => {
       const error = new Error()
       const handler = jest.fn(() => {

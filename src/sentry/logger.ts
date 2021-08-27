@@ -1,4 +1,4 @@
-import { uuid } from "../core/uuid"
+import { uuid } from "../core/utils/uuid"
 
 export const Logger = (options: {
   DSN: string
