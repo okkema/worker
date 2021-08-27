@@ -1,8 +1,11 @@
+import CoreError from "./error"
+
 const createResponse = (
   status: number,
   statusText: string,
   body?: BodyInit,
-): Response => new Response(body, { status, statusText })
+  headers?: Headers,
+): Response => new Response(body, { status, statusText, headers })
 
 export const Ok = (body: BodyInit = "OK"): Response =>
   createResponse(200, "OK", body)
@@ -24,3 +27,13 @@ export const NotFound = (body: BodyInit = "Not Found"): Response =>
 export const InternalServerError = (
   body: BodyInit = "Internal Server Error",
 ): Response => createResponse(500, "Internal Server Error", body)
+
+export const ProblemDetails = (error: CoreError): Response => {
+  const { detail, name, status, title, type } = error
+  return createResponse(
+    status,
+    name,
+    JSON.stringify({ detail, status, title, type }),
+    new Headers({ "Content-Type": "application/json" }),
+  )
+}

@@ -15,7 +15,7 @@ class CoreError extends Error {
     this.type = init?.type ?? this.constructor.name
     this.title = init?.title ?? this.constructor.name
     this.status = init?.status ?? 500
-    this.detail = init?.detail ?? this.constructor.name  
+    this.detail = init?.detail ?? this.constructor.name
   }
 }
 

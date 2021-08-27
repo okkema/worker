@@ -5,7 +5,7 @@ import { decode } from "./decoder"
 
 export class Auth0ValidatorError extends CoreError {
   constructor(detail = "Auth0ValidatorError") {
-    super({detail})
+    super({ detail })
   }
 }
 

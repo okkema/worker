@@ -16,7 +16,7 @@ describe("CoreError", () => {
       detail: "detail",
       status: 200,
       title: "title",
-      type: "type"
+      type: "type",
     }
     const result = new CoreError(init)
     expect(result.name).toBe(CoreError.name)
