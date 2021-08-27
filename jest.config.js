@@ -1,7 +1,10 @@
-module.exports = {
+/** @type { import("@jest/types").Config.InitialOptions } */
+const config = {
   transform: {
     "^.+\\.(t|j)sx?$": "ts-jest",
   },
   collectCoverageFrom: ["src/**/*.{ts,js}"],
-  setupFilesAfterEnv: ["<rootDir>/scripts/jest-setup.ts"],
+  setupFilesAfterEnv: ["./jest.setup.ts"],
 }
+
+module.exports = config

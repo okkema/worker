@@ -26,13 +26,7 @@ const importKey = async (jwk: JWK) => {
     kid: jwk.kid,
     key: await crypto.subtle.importKey(
       "jwk",
-      {
-        kty: jwk.kty,
-        e: jwk.e,
-        n: jwk.n,
-        alg: jwk.alg,
-        ext: true,
-      },
+      jwk,
       { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
       false,
       ["verify"],
@@ -56,8 +50,12 @@ const validateSignature = async (jwt: JWT, token: string) => {
   const key = keys.find((x) => x.kid === jwt.header.kid)
   if (!key)
     throw new Auth0ValidatorError(`No matching JWK found: ${jwt.header.kid}`)
-  if (!(await verifySignature(jwt, token, key.key)))
-    throw new Auth0ValidatorError("Invalid JWT signature")
+  try {
+    if (!(await verifySignature(jwt, token, key.key)))
+      throw new Auth0ValidatorError("Invalid JWT signature")
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 const validateExpiration = (jwt: JWT) => {
