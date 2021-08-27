@@ -1,4 +1,4 @@
-import { type } from "os"
+import pkg from "../../package.json"
 import { uuid } from "../core/utils/uuid"
 
 type SentryLoggerInit = {
@@ -22,7 +22,7 @@ const SentryLogger = (init: SentryLoggerInit): SentryLogger => {
           timestamp: new Date().toISOString().substr(0, 19),
           sdk: {
             name: client,
-            version: "1.0.0",
+            version: pkg.version,
           },
           level: "error",
           transaction: event.request.url,

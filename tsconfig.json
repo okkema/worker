@@ -10,11 +10,8 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": [
-      "@cloudflare/workers-types",
-      "@types/jest",
-      "node"
-    ]
+    "types": ["@cloudflare/workers-types", "@types/jest", "node"],
+    "resolveJsonModule": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "test"]

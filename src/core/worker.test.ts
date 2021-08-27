@@ -35,7 +35,7 @@ describe("worker", () => {
         throw error
       })
       const logError = jest.fn()
-      const worker = Worker({ handler, logger: { logError }})
+      const worker = Worker({ handler, logger: { logError } })
       const request = new Request("/")
       const event = new FetchEvent("fetch", { request })
       worker.handleEvent(event)
