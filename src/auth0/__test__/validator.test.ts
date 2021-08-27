@@ -180,11 +180,16 @@ describe("validator", () => {
         },
       },
       key,
-    ).update(JSON.stringify({
-      aud: audience,
-      iss: issuer,
-      exp: Date.now() + 1000,
-    })).final().then(result => String(result))
+    )
+      .update(
+        JSON.stringify({
+          aud: audience,
+          iss: issuer,
+          exp: Date.now() + 1000,
+        }),
+      )
+      .final()
+      .then((result) => String(result))
     const jwk = keyStore.toJSON() as JWK
     const mockDecode = decode as jest.MockedFunction<typeof decode>
     mockDecode.mockImplementationOnce((token) => {
@@ -194,9 +199,12 @@ describe("validator", () => {
         header: JSON.parse(atob(header)),
         payload: JSON.parse(atob(payload)),
         signature: btoa(
-          encodeURIComponent(signature).replace(/%([0-9A-F]{2})/g, (match, p1) => {
-            return String.fromCharCode(parseInt(p1, 16))
-          }),
+          encodeURIComponent(signature).replace(
+            /%([0-9A-F]{2})/g,
+            (match, p1) => {
+              return String.fromCharCode(parseInt(p1, 16))
+            },
+          ),
         ),
       }
     })

@@ -1,11 +1,11 @@
 import { TextEncoder } from "util"
-import { CoreError } from "../core/error"
+import CoreError from "../core/error"
 import { fetchJWKS } from "./client"
 import { decode } from "./decoder"
 
 export class Auth0ValidatorError extends CoreError {
-  constructor(message = "Auth0ValidatorError") {
-    super(message)
+  constructor(detail = "Auth0ValidatorError") {
+    super({detail})
   }
 }
 

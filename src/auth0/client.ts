@@ -1,8 +1,8 @@
-import { CoreError } from "../core/error"
+import CoreError from "../core/error"
 
 export class Auth0ClientError extends CoreError {
-  constructor(message = "Auth0ClientError") {
-    super(message)
+  constructor(detail = "Auth0ClientError") {
+    super({detail})
   }
 }
 
