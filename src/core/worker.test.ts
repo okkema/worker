@@ -1,4 +1,4 @@
-import { Worker } from "../worker"
+import Worker from "./worker"
 
 declare const global: unknown
 
@@ -13,7 +13,7 @@ describe("worker", () => {
     const worker = Worker({ handler })
     const request = new Request("/")
     const event = new FetchEvent("fetch", { request })
-    worker.handle(event)
+    worker.handleEvent(event)
     expect(handler).toHaveBeenCalledWith(event)
   })
   it("should call the logger if present", async () => {
@@ -25,7 +25,7 @@ describe("worker", () => {
     const worker = Worker({ handler, logger })
     const request = new Request("/")
     const event = new FetchEvent("fetch", { request })
-    worker.handle(event)
+    worker.handleEvent(event)
     expect(handler).toHaveBeenCalledWith(event)
     expect(logger).toHaveBeenCalledWith(event, error)
   })

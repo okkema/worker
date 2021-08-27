@@ -1,10 +1,16 @@
 import { InternalServerError } from "./responses"
 
-export const Worker = (options: {
+type WorkerInit = {
   handler: (event: FetchEvent) => Promise<Response>
   logger?: (event: FetchEvent, error: Error) => Promise<boolean>
-}): { handle: (event: FetchEvent) => Promise<Response> } => {
-  const { handler, logger } = options
+}
+
+type Worker = {
+  handleEvent: (event: FetchEvent) => Promise<Response>
+}
+
+const Worker = (init: WorkerInit): Worker => {
+  const { handler, logger } = init
 
   const handleError = async (event: FetchEvent, error: Error) => {
     if (logger) await logger(event, error)
@@ -26,6 +32,8 @@ export const Worker = (options: {
   })
 
   return {
-    handle: handleEvent,
+    handleEvent,
   }
 }
+
+export default Worker
