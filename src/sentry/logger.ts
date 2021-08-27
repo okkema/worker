@@ -1,4 +1,4 @@
-import pkg from "../../package.json"
+import metadata from "../../package.json"
 import { uuid } from "../core/utils/uuid"
 
 type SentryLoggerInit = {
@@ -10,8 +10,8 @@ type SentryLogger = Logger
 const SentryLogger = (init: SentryLoggerInit): SentryLogger => {
   const { DSN } = init
   const { origin, pathname, username } = new URL(DSN)
-  const client = "worker"
-  const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${client}`
+  const { name, version } = metadata
+  const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${name}`
 
   const logError = async (event: FetchEvent, error: Error) => {
     try {
@@ -21,8 +21,8 @@ const SentryLogger = (init: SentryLoggerInit): SentryLogger => {
           event_id: uuid(),
           timestamp: new Date().toISOString().substr(0, 19),
           sdk: {
-            name: client,
-            version: pkg.version,
+            name,
+            version,
           },
           level: "error",
           transaction: event.request.url,
