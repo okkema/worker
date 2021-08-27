@@ -1,20 +1,22 @@
 import CoreError from "./error"
 import { InternalServerError, ProblemDetails } from "./responses"
 
+type EventHandler = (event: FetchEvent) => Promise<Response>
+
 type WorkerInit = {
-  handler: (event: FetchEvent) => Promise<Response>
-  logger?: (event: FetchEvent, error: Error) => Promise<boolean>
+  handler: EventHandler
+  logger?: Logger
 }
 
 type Worker = {
-  handleEvent: (event: FetchEvent) => Promise<Response>
+  handleEvent: EventHandler
 }
 
 const Worker = (init: WorkerInit): Worker => {
   const { handler, logger } = init
 
   const handleError = async (event: FetchEvent, error: Error) => {
-    if (logger) await logger(event, error)
+    if (logger) await logger.logError(event, error)
     if (error instanceof CoreError) return ProblemDetails(error)
     return InternalServerError()
   }

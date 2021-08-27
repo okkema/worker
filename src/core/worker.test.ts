@@ -34,13 +34,13 @@ describe("worker", () => {
       const handler = jest.fn(() => {
         throw error
       })
-      const logger = jest.fn()
-      const worker = Worker({ handler, logger })
+      const logError = jest.fn()
+      const worker = Worker({ handler, logger: { logError }})
       const request = new Request("/")
       const event = new FetchEvent("fetch", { request })
       worker.handleEvent(event)
       expect(handler).toHaveBeenCalledWith(event)
-      expect(logger).toHaveBeenCalledWith(event, error)
+      expect(logError).toHaveBeenCalledWith(event, error)
     })
     it("returns problem details if expected", async () => {
       const error = new CoreError()
