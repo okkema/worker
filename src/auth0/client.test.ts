@@ -1,4 +1,4 @@
-import { Auth0ClientError, fetchJWKS } from "../client"
+import { Auth0ClientError, fetchJWKS } from "./client"
 
 describe("client", () => {
   it("should return a JWKS", async () => {

@@ -1,4 +1,4 @@
-import { Auth0DecoderError, decode } from "../decoder"
+import { Auth0DecoderError, decode } from "./decoder"
 
 describe("decoder", () => {
   it("should decode a valid token", () => {

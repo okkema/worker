@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Auth0ValidatorError, validateToken } from "../validator"
-import { decode } from "../decoder"
-import { fetchJWKS } from "../client"
+import { Auth0ValidatorError, validateToken } from "./validator"
+import { decode } from "./decoder"
+import { fetchJWKS } from "./client"
 import { JWK, JWS } from "node-jose"
 import { Crypto } from "node-webcrypto-ossl"
 
-jest.mock("../decoder", () => ({
+jest.mock("./decoder", () => ({
   decode: jest.fn(),
 }))
 
-jest.mock("../client", () => ({
+jest.mock("./client", () => ({
   fetchJWKS: jest.fn(),
 }))
 

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Authorizer } from "../authorizer"
-import { validateToken } from "../validator"
+import { Authorizer } from "./authorizer"
+import { validateToken } from "./validator"
 
-jest.mock("../validator", () => ({
+jest.mock("./validator", () => ({
   validateToken: jest.fn(),
 }))
 
