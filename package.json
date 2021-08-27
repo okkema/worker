@@ -13,7 +13,7 @@
     "test:update": "jest --updateSnapshot",
     "test:verbose": "jest --verbose"
   },
-  "author": "Benjamin Okkema <ben@okkema.org>",
+  "author": "Okkema Labs <correos@okkema.org>",
   "license": "MIT",
   "eslintConfig": {
     "root": true,
