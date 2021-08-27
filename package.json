@@ -2,19 +2,32 @@
   "name": "worker",
   "version": "1.0.0",
   "description": "Cloudflare Worker Web Framework",
-  "main": "dist/worker.js",
+  "main": "dist/index.js",
   "scripts": {
-    "develop": "npm-run-all build start",
-    "start": "miniflare dist/worker.js",
     "build": "tsc",
+    "clean": "rm -r ./dist",
     "format": "prettier --write  '*.{json,js}' 'src/**/*.{js,ts}'",
-    "lint": "eslint src && prettier --check '*.{json,js}' 'src/**/*.{js,ts}'",
+    "lint": "eslint '**/*.{js,ts,json}'",
+    "lint:fix": "eslint '**/*.{js,ts,json}' --fix",
     "test": "jest",
     "test:update": "jest --updateSnapshot",
     "test:verbose": "jest --verbose"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okkema/worker.git"
+  },
+  "keywords": [
+    "okkema",
+    "worker",
+    "cloudflare"
+  ],
   "author": "Okkema Labs <correos@okkema.org>",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/okkema/worker/issues"
+  },
+  "homepage": "https://github.com/okkema/worker#readme",
   "eslintConfig": {
     "root": true,
     "extends": [
@@ -29,8 +42,8 @@
     "@types/node": "^15.12.5",
     "@types/node-jose": "^1.1.8",
     "@types/service-worker-mock": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-typescript": "^3.0.0",
@@ -43,5 +56,7 @@
     "ts-jest": "^27.0.1",
     "typescript": "^4.3.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "eslint-plugin-prettier": "^3.4.1"
+  }
 }
