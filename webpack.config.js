@@ -12,21 +12,22 @@ const config = {
     library: {
       name: package.name,
       type: "umd",
+      umdNamedDefine: true,
     },
   },
   mode: "production",
   devtool: "source-map",
   resolve: {
     extensions: [".ts"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
         loader: "ts-loader",
-      },
-      {
-        exclude: /\.test.d.ts$/,
       },
     ],
   },

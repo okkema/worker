@@ -1,4 +1,4 @@
-export const uuid = (): string => {
+const uuid = (): string => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
     let array
     if (char === "y") {
@@ -10,3 +10,5 @@ export const uuid = (): string => {
     return (array[0] % 16).toString(16)
   })
 }
+
+export default uuid

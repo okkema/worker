@@ -61,7 +61,7 @@ describe("worker", () => {
       expect(json.type).toBeDefined()
     })
     it("returns an internal server error if unexpected", async () => {
-      const error = new Error()
+      const error = new Error("error")
       const handler = jest.fn(() => {
         throw error
       })
@@ -72,6 +72,8 @@ describe("worker", () => {
       expect(handler).toHaveBeenCalledWith(event)
       expect(result.status).toBe(500)
       expect(result.statusText).toBe("Internal Server Error")
+      const text = await result.text()
+      expect(text).toBe(error.message)
     })
   })
 })

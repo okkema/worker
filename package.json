@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "1.0.2",
+  "version": "1.0.7",
   "description": "Cloudflare Worker Web Framework",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

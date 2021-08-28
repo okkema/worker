@@ -4,6 +4,9 @@ const config = {
   collectCoverageFrom: ["./src/**/*.{ts,js}"],
   setupFilesAfterEnv: ["./jest.setup.js"],
   snapshotResolver: "./jest.snapshots.js",
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
 }
 
 module.exports = config

@@ -1,4 +1,4 @@
-import { uuid } from "./uuid"
+import uuid from "./uuid"
 
 describe("uuid", () => {
   it("generates a uuid in correct format", () => {

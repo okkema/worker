@@ -1,4 +1,4 @@
-import { uuid } from "../core/utils/uuid"
+import uuid from "@/core/utils/uuid"
 
 type SentryLoggerInit = {
   DSN: string

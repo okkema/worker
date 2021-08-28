@@ -18,7 +18,7 @@ const Worker = (init: WorkerInit): Worker => {
   const handleError = async (event: FetchEvent, error: Error) => {
     if (logger) await logger.logError(event, error)
     if (error instanceof CoreError) return ProblemDetails(error)
-    return InternalServerError()
+    return InternalServerError(error.message)
   }
 
   const handleEvent = async (event: FetchEvent) => {
