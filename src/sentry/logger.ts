@@ -1,4 +1,3 @@
-import metadata from "../../package.json"
 import { uuid } from "../core/utils/uuid"
 
 type SentryLoggerInit = {
@@ -10,7 +9,8 @@ type SentryLogger = Logger
 const SentryLogger = (init: SentryLoggerInit): SentryLogger => {
   const { DSN } = init
   const { origin, pathname, username } = new URL(DSN)
-  const { name, version } = metadata
+  const name = process.env.PACKAGE_NAME
+  const version = process.env.PACKAGE_VERSION
   const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${name}`
 
   const logError = async (event: FetchEvent, error: Error) => {
