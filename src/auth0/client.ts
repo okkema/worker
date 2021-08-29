@@ -2,7 +2,12 @@ import Problem from "../core/problem"
 
 export class Auth0ClientError extends Problem {
   constructor(detail: string) {
-    super({ detail, status: 500, title: "An error occured while requesting the Auth0 API", type: "Auth0ClientError" })
+    super({
+      detail,
+      status: 500,
+      title: "An error occured while requesting the Auth0 API",
+      type: "Auth0ClientError",
+    })
   }
 }
 

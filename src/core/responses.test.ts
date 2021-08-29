@@ -55,7 +55,7 @@ describe("responses", () => {
     }
     const result = ProblemDetails(new Problem(init))
     expect(result.status).toBe(init.status)
-    expect(result.statusText).toBe(Problem.name)
+    expect(result.statusText).toBe("Problem Details")
     const json = await result.json()
     expect(json).toEqual(init)
   })

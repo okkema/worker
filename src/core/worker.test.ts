@@ -43,7 +43,13 @@ describe("worker", () => {
       expect(logError).toHaveBeenCalledWith(event, error)
     })
     it("returns problem details if expected", async () => {
-      const error = new Problem({detail: "detail",status: 500, title: "title", type: "type"})
+      const init = {
+        detail: "detail",
+        status: 500,
+        title: "title",
+        type: "type",
+      }
+      const error = new Problem(init)
       const handler = jest.fn(() => {
         throw error
       })
@@ -53,12 +59,9 @@ describe("worker", () => {
       const result = await worker.handleEvent(event)
       expect(handler).toHaveBeenCalledWith(event)
       expect(result.status).toBe(error.status)
-      expect(result.statusText).toBe(error.name)
+      expect(result.statusText).toBe("Problem Details")
       const json = await result.json()
-      expect(json.detail).toBeDefined()
-      expect(json.status).toBeDefined()
-      expect(json.title).toBeDefined()
-      expect(json.type).toBeDefined()
+      expect(json).toEqual(init)
     })
     it("returns an internal server error if unexpected", async () => {
       const error = new Error("error")

@@ -2,7 +2,12 @@ import Problem from "../core/problem"
 
 export class Auth0DecoderError extends Problem {
   constructor(detail: string) {
-    super({ detail, status: 500, title: "An error occured while decoding the JWT", type: "Auth0DecodeError" })
+    super({
+      detail,
+      status: 500,
+      title: "An error occured while decoding the JWT",
+      type: "Auth0DecodeError",
+    })
   }
 }
 

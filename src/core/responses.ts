@@ -1,4 +1,4 @@
-import CoreError from "./problem"
+import Problem from "./problem"
 
 const createResponse = (
   status: number,
@@ -7,32 +7,42 @@ const createResponse = (
   headers?: Headers,
 ): Response => new Response(body, { status, statusText, headers })
 
-export const Ok = (body: BodyInit = "OK"): Response =>
-  createResponse(200, "OK", body)
+export const Ok = (body: BodyInit = "OK", headers?: Headers): Response =>
+  createResponse(200, "OK", body, headers)
 
-export const NoContent = (): Response => createResponse(204, "No Content")
+export const NoContent = (headers?: Headers): Response =>
+  createResponse(204, "No Content", null, headers)
 
-export const BadRequest = (body: BodyInit = "Bad Request"): Response =>
-  createResponse(400, "Bad Request", body)
+export const BadRequest = (
+  body: BodyInit = "Bad Request",
+  headers?: Headers,
+): Response => createResponse(400, "Bad Request", body, headers)
 
-export const Unauthorized = (body: BodyInit = "Unauthorized"): Response =>
-  createResponse(401, "Unauthorized", body)
+export const Unauthorized = (
+  body: BodyInit = "Unauthorized",
+  headers?: Headers,
+): Response => createResponse(401, "Unauthorized", body, headers)
 
-export const Forbidden = (body: BodyInit = "Forbidden"): Response =>
-  createResponse(403, "Forbidden", body)
+export const Forbidden = (
+  body: BodyInit = "Forbidden",
+  headers?: Headers,
+): Response => createResponse(403, "Forbidden", body, headers)
 
-export const NotFound = (body: BodyInit = "Not Found"): Response =>
-  createResponse(404, "Not Found", body)
+export const NotFound = (
+  body: BodyInit = "Not Found",
+  headers?: Headers,
+): Response => createResponse(404, "Not Found", body, headers)
 
 export const InternalServerError = (
   body: BodyInit = "Internal Server Error",
-): Response => createResponse(500, "Internal Server Error", body)
+  headers?: Headers,
+): Response => createResponse(500, "Internal Server Error", body, headers)
 
-export const ProblemDetails = (error: CoreError): Response => {
-  const { detail, name, status, title, type } = error
+export const ProblemDetails = (problem: Problem): Response => {
+  const { detail, status, title, type } = problem
   return createResponse(
     status,
-    name,
+    "Problem Details",
     JSON.stringify({ detail, status, title, type }),
     new Headers({ "Content-Type": "application/json" }),
   )

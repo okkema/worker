@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const package = require("./package.json")
 
 /** @type { import("@babel/core").TransformOptions } */
@@ -13,12 +14,15 @@ const config = {
         globals: ["Error", "Array"],
       },
     ],
-    ["babel-plugin-inline-replace-variables", {
-      PACKAGE_NAME: package.name,
-      PACKAGE_VERSION: package.version,
-    }],
-    ["babel-plugin-tsconfig-paths"]
-  ]
+    [
+      "babel-plugin-inline-replace-variables",
+      {
+        PACKAGE_NAME: package.name,
+        PACKAGE_VERSION: package.version,
+      },
+    ],
+    ["babel-plugin-tsconfig-paths"],
+  ],
 }
 
 module.exports = config
