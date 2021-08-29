@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import makeServiceWorkerEnv from "service-worker-mock"
 import crypto from "crypto"
 

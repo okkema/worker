@@ -1,5 +1,8 @@
 import uuid from "@/core/utils/uuid"
 
+declare const PACKAGE_NAME: string
+declare const PACKAGE_VERSION: string
+
 type SentryLoggerInit = {
   DSN: string
 }
@@ -9,8 +12,8 @@ type SentryLogger = Logger
 const SentryLogger = (init: SentryLoggerInit): SentryLogger => {
   const { DSN } = init
   const { origin, pathname, username } = new URL(DSN)
-  const name = process.env.PACKAGE_NAME
-  const version = process.env.PACKAGE_VERSION
+  const name = PACKAGE_NAME
+  const version = PACKAGE_VERSION
   const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${name}`
 
   const logError = async (event: FetchEvent, error: Error) => {

@@ -19,24 +19,15 @@ const config = {
   devtool: "source-map",
   resolve: {
     extensions: [".ts"],
-    alias: {
-      "@": path.resolve(__dirname, "src"),
-    },
   },
   module: {
     rules: [
       {
         test: /\.ts$/,
-        loader: "ts-loader",
+        loader: "babel-loader",
       },
     ],
   },
-  plugins: [
-    new webpack.EnvironmentPlugin({
-      PACKAGE_VERSION: package.version,
-      PACKAGE_NAME: package.name,
-    }),
-  ],
 }
 
 module.exports = config

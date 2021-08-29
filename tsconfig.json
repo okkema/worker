@@ -4,10 +4,10 @@
     "outDir": "dist",
     "lib": ["esnext", "webworker"],
     "types": ["@cloudflare/workers-types", "@types/jest", "node"],
-    "resolveJsonModule": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
     "esModuleInterop": true,
     "declaration": true,
-    "sourceMap": true,
     "paths": {
       "@/*": ["./src/*"]
     }
