@@ -1,4 +1,4 @@
-import CoreError from "./error"
+import Problem from "./problem"
 import {
   BadRequest,
   Forbidden,
@@ -53,9 +53,9 @@ describe("responses", () => {
       title: "title",
       type: "type",
     }
-    const result = ProblemDetails(new CoreError(init))
+    const result = ProblemDetails(new Problem(init))
     expect(result.status).toBe(init.status)
-    expect(result.statusText).toBe(init.type)
+    expect(result.statusText).toBe(Problem.name)
     const json = await result.json()
     expect(json).toEqual(init)
   })

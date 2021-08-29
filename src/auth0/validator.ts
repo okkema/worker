@@ -1,11 +1,11 @@
 import { TextEncoder } from "util"
-import CoreError from "../core/error"
+import Problem from "../core/problem"
 import { fetchJWKS } from "./client"
 import { decode } from "./decoder"
 
-export class Auth0ValidatorError extends CoreError {
-  constructor(type = "Auth0ValidatorError") {
-    super({ type })
+export class Auth0ValidatorError extends Problem {
+  constructor(detail: string) {
+    super({ detail, status: 401, title: "The token is invalid.", type: "Auth0ValidationError" })
   }
 }
 

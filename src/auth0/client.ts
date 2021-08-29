@@ -1,8 +1,8 @@
-import CoreError from "../core/error"
+import Problem from "../core/problem"
 
-export class Auth0ClientError extends CoreError {
-  constructor(type = "Auth0ClientError") {
-    super({ type })
+export class Auth0ClientError extends Problem {
+  constructor(detail: string) {
+    super({ detail, status: 500, title: "An error occured while requesting the Auth0 API", type: "Auth0ClientError" })
   }
 }
 

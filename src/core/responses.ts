@@ -1,4 +1,4 @@
-import CoreError from "./error"
+import CoreError from "./problem"
 
 const createResponse = (
   status: number,

@@ -1,4 +1,4 @@
-import CoreError from "./error"
+import Problem from "./problem"
 import Worker from "./worker"
 
 declare const global: unknown
@@ -43,7 +43,7 @@ describe("worker", () => {
       expect(logError).toHaveBeenCalledWith(event, error)
     })
     it("returns problem details if expected", async () => {
-      const error = new CoreError()
+      const error = new Problem({detail: "detail",status: 500, title: "title", type: "type"})
       const handler = jest.fn(() => {
         throw error
       })
