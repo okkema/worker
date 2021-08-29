@@ -1,8 +1,8 @@
 import CoreError from "../core/error"
 
 export class Auth0ClientError extends CoreError {
-  constructor(detail = "Auth0ClientError") {
-    super({ detail })
+  constructor(type = "Auth0ClientError") {
+    super({ type })
   }
 }
 

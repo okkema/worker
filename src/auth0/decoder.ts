@@ -1,8 +1,8 @@
 import CoreError from "../core/error"
 
 export class Auth0DecoderError extends CoreError {
-  constructor(detail = "Auth0DecoderError") {
-    super({ detail })
+  constructor(type = "Auth0DecoderError") {
+    super({ type })
   }
 }
 

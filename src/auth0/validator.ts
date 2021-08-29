@@ -4,8 +4,8 @@ import { fetchJWKS } from "./client"
 import { decode } from "./decoder"
 
 export class Auth0ValidatorError extends CoreError {
-  constructor(detail = "Auth0ValidatorError") {
-    super({ detail })
+  constructor(type = "Auth0ValidatorError") {
+    super({ type })
   }
 }
 

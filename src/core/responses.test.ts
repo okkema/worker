@@ -55,7 +55,7 @@ describe("responses", () => {
     }
     const result = ProblemDetails(new CoreError(init))
     expect(result.status).toBe(init.status)
-    expect(result.statusText).toBe(CoreError.name)
+    expect(result.statusText).toBe(init.type)
     const json = await result.json()
     expect(json).toEqual(init)
   })
