@@ -1,4 +1,4 @@
-import uuid from "@/core/utils/uuid"
+import uuid from "../core/utils/uuid"
 
 declare const PACKAGE_NAME: string
 declare const PACKAGE_VERSION: string

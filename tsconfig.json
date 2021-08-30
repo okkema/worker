@@ -7,10 +7,7 @@
     "emitDeclarationOnly": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "declaration": true,
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "declaration": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist"]
