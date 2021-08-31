@@ -1,6 +1,7 @@
 // core
 import Worker from "./core/worker"
 import Problem from "./core/problem"
+import Router from "./core/router"
 import {
   BadRequest,
   Ok,
@@ -17,6 +18,7 @@ import SentryLogger from "./sentry/logger"
 export {
   Worker,
   Problem,
+  Router,
   SentryLogger,
   uuid,
   BadRequest,
