@@ -1,5 +1,5 @@
 import Problem from "../core/problem"
-import { encode } from "../core/utils/base64"
+import base64 from "../core/utils/base64"
 
 export class Auth0DecoderError extends Problem {
   constructor(detail: string) {
@@ -18,7 +18,7 @@ export const decode = (token: string): JWT => {
     return {
       header: JSON.parse(atob(header)),
       payload: JSON.parse(atob(payload)),
-      signature: encode(signature),
+      signature: base64.encode(signature),
     }
   } catch {
     throw new Auth0DecoderError("Unable to decode JWT")
