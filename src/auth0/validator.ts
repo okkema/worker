@@ -8,7 +8,7 @@ export class Auth0ValidatorError extends Problem {
     super({
       detail,
       status: 401,
-      title: "The token is invalid.",
+      title: "The token is invalid",
       type: "Auth0ValidationError",
     })
   }
@@ -22,7 +22,7 @@ export const validateToken = async (
   const jwt = decode(token)
   validateHeader(jwt)
   validatePayload(jwt, audience, issuer)
-  validateSignature(jwt, token)
+  await validateSignature(jwt, token)
   return true
 }
 

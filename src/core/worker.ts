@@ -12,6 +12,10 @@ type Worker = {
   handleEvent: EventHandler
 }
 
+export type Logger = {
+  logError: (event: FetchEvent, error: Error) => Promise<boolean>
+}
+
 const Worker = (init: WorkerInit): Worker => {
   const { handler, logger } = init
 

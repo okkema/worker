@@ -1,7 +1,7 @@
 import { Auth0ClientError, fetchJWKS } from "./client"
 
 describe("client", () => {
-  it("should return a JWKS", async () => {
+  it("returns a JWKS", async () => {
     const issuer = "http://localhost"
     const jwks = jest.fn()
     const json = jest.fn(() => jwks)
@@ -16,7 +16,7 @@ describe("client", () => {
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining(issuer))
     expect(json).toHaveBeenCalled()
   })
-  it("should throw an error", async () => {
+  it("throws an error when response not ok", async () => {
     const issuer = "http://localhost"
     const json = jest.fn()
     const fetch = jest.fn(() => {

@@ -5,7 +5,11 @@ const package = require("./package.json")
 const config = {
   env: {
     production: {
+      presets: [
+        ["@babel/preset-env", { targets: { esmodules: true }, modules: false }],
+      ],
       ignore: ["**/*.d.ts", "**/*.test.ts"],
+      plugins: [["babel-plugin-add-import-extension", { extension: "js" }]],
     },
   },
   presets: [

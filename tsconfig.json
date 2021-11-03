@@ -5,7 +5,6 @@
     "lib": ["esnext", "webworker"],
     "types": ["@cloudflare/workers-types", "@types/jest", "node"],
     "emitDeclarationOnly": true,
-    "isolatedModules": true,
     "esModuleInterop": true,
     "declaration": true
   },

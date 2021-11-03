@@ -7,7 +7,7 @@ jest.mock("./validator", () => ({
 }))
 
 describe("authorizer", () => {
-  it("should return an Unauthorized response when no token is present", async () => {
+  it("returns an Unauthorized response when no token is present", async () => {
     const request = new Request("/")
     const audience = "audience"
     const issuer = "issuer"
