@@ -8,7 +8,7 @@ describe("Router", () => {
       expect(router.routes.length).toBe(0)
     })
   })
-  describe("useRoute", () => {
+  describe("use", () => {
     it("registers the route", () => {
       const router = Router()
       const route: Route = {
@@ -16,7 +16,7 @@ describe("Router", () => {
         method: "GET",
         handlers: [],
       }
-      router.useRoute(route)
+      router.use(route)
       expect(router.routes[0]).toEqual(expect.objectContaining(route))
     })
     it("stores the routes in the same order they were registered", () => {
@@ -31,8 +31,8 @@ describe("Router", () => {
         method: "POST",
         handlers: [],
       }
-      router.useRoute(route1)
-      router.useRoute(route2)
+      router.use(route1)
+      router.use(route2)
       expect(router.routes[0]).toEqual(expect.objectContaining(route1))
       expect(router.routes[1]).toEqual(expect.objectContaining(route2))
     })
@@ -43,7 +43,7 @@ describe("Router", () => {
         method: "GET",
         handlers: [],
       }
-      router.useRoute(route)
+      router.use(route)
       expect(router.routes[0].regex).toBeDefined()
       expect(router.routes[0].regex).toBeInstanceOf(RegExp)
     })
@@ -56,11 +56,11 @@ describe("Router", () => {
         handlers: [],
         regex,
       }
-      router.useRoute(route)
+      router.use(route)
       expect(router.routes[0].regex).toBe(regex)
     })
   })
-  describe("handleRoute", () => {
+  describe("handle", () => {
     it("calls the handler on a match", async () => {
       const router = Router()
       const handler = jest.fn()
@@ -70,9 +70,9 @@ describe("Router", () => {
         method: "GET",
         handlers: [handler],
       }
-      router.useRoute(route)
+      router.use(route)
       const request = new Request("/")
-      await router.handleRequest(request)
+      await router.handle(request)
       expect(handler).toHaveBeenCalledTimes(1)
     })
     it("attaches the query and params to the request", async () => {
@@ -88,9 +88,9 @@ describe("Router", () => {
         method: "GET",
         handlers: [handler],
       }
-      router.useRoute(route)
+      router.use(route)
       const request = new Request("/123?key=value")
-      await router.handleRequest(request)
+      await router.handle(request)
     })
     it("requires an exact match", async () => {
       const router = Router()
@@ -100,9 +100,9 @@ describe("Router", () => {
         method: "GET",
         handlers: [handler],
       }
-      router.useRoute(route)
+      router.use(route)
       const request = new Request("/test")
-      await router.handleRequest(request)
+      await router.handle(request)
       expect(handler).not.toHaveBeenCalled()
     })
     it("returns the first match found", async () => {
@@ -121,10 +121,10 @@ describe("Router", () => {
         method: "GET",
         handlers: [handler2],
       }
-      router.useRoute(route1)
-      router.useRoute(route2)
+      router.use(route1)
+      router.use(route2)
       const request = new Request("/test/first")
-      await router.handleRequest(request)
+      await router.handle(request)
       expect(handler1).toHaveBeenCalledTimes(1)
       expect(handler2).not.toHaveBeenCalled()
     })
@@ -137,15 +137,15 @@ describe("Router", () => {
         method: "ALL",
         handlers: [handler],
       }
-      router.useRoute(route)
+      router.use(route)
       const request1 = new Request("/", { method: "GET" })
-      await router.handleRequest(request1)
+      await router.handle(request1)
       const request2 = new Request("/", { method: "POST" })
-      await router.handleRequest(request2)
+      await router.handle(request2)
       const request3 = new Request("/", { method: "PUT" })
-      await router.handleRequest(request3)
+      await router.handle(request3)
       const request4 = new Request("/", { method: "DELETE" })
-      await router.handleRequest(request4)
+      await router.handle(request4)
       expect(handler).toHaveBeenCalledTimes(4)
     })
     it("calls the handlers in order", async () => {
@@ -170,9 +170,9 @@ describe("Router", () => {
         method: "GET",
         handlers: [handler1, handler2, handler3],
       }
-      router.useRoute(route)
+      router.use(route)
       const request = new Request("/")
-      await router.handleRequest(request)
+      await router.handle(request)
       expect(handler1).toHaveBeenCalledTimes(1)
       expect(handler2).toHaveBeenCalledTimes(1)
       expect(handler3).toHaveBeenCalledTimes(1)
@@ -190,9 +190,9 @@ describe("Router", () => {
         method: "GET",
         handlers: [handler1, handler2, handler3],
       }
-      router.useRoute(route)
+      router.use(route)
       const request = new Request("/")
-      await router.handleRequest(request)
+      await router.handle(request)
       expect(handler1).toHaveBeenCalledTimes(1)
       expect(handler2).toHaveBeenCalledTimes(1)
       expect(handler3).not.toHaveBeenCalled()
@@ -204,9 +204,38 @@ describe("Router", () => {
         method: "GET",
         handlers: [],
       }
-      router.useRoute(route)
+      router.use(route)
       const request = new Request("/")
-      await expect(router.handleRequest(request)).rejects.toThrowError(Problem)
+      await expect(router.handle(request)).rejects.toThrowError(Problem)
+    })
+    describe("shortcuts", () => {
+      describe("map to the HTTP method", () => {
+        it("GET", async () => {
+          const router = Router()
+          router.get("/")
+          expect(router.routes[0].method).toBe("GET")
+        })
+        it("POST", async () => {
+          const router = Router()
+          router.post("/")
+          expect(router.routes[0].method).toBe("POST")
+        })
+        it("PUT", async () => {
+          const router = Router()
+          router.put("/")
+          expect(router.routes[0].method).toBe("PUT")
+        })
+        it("DELETE", async () => {
+          const router = Router()
+          router.del("/")
+          expect(router.routes[0].method).toBe("DELETE")
+        })
+        it("ALL", async () => {
+          const router = Router()
+          router.all("/")
+          expect(router.routes[0].method).toBe("ALL")
+        })
+      })
     })
     describe("regex", () => {
       it("supports allowed characters", async () => {
@@ -222,9 +251,9 @@ describe("Router", () => {
           method: "GET",
           handlers: [handler],
         }
-        router.useRoute(route)
+        router.use(route)
         const request = new Request(path)
-        await router.handleRequest(request)
+        await router.handle(request)
         expect(handler).toHaveBeenCalledTimes(1)
       })
       it.todo("supports file extensions")

@@ -9,8 +9,13 @@ type RequestHandler = (request: RoutedRequest) => Promise<Response>
 
 type Router = {
   routes: Route[]
-  handleRequest: RequestHandler
-  useRoute: (route: Route) => void
+  handle: RequestHandler
+  use: (route: Route) => void
+  get: (path: string, ...handlers: RequestHandler[]) => void
+  post: (path: string, ...handlers: RequestHandler[]) => void
+  put: (path: string, ...handlers: RequestHandler[]) => void
+  del: (path: string, ...handlers: RequestHandler[]) => void
+  all: (path: string, ...handlers: RequestHandler[]) => void
 }
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "ALL"
@@ -25,7 +30,7 @@ export type Route = {
 const Router = (): Router => {
   const routes: Route[] = []
 
-  const useRoute = (route: Route) => {
+  const use = (route: Route) => {
     routes.push({
       regex:
         route.regex ??
@@ -40,7 +45,42 @@ const Router = (): Router => {
     })
   }
 
-  const handleRequest = async (request: RoutedRequest) => {
+  const get = (path: string, ...handlers: RequestHandler[]) =>
+    use({
+      method: "GET",
+      path,
+      handlers,
+    })
+
+  const post = (path: string, ...handlers: RequestHandler[]) =>
+    use({
+      method: "POST",
+      path,
+      handlers,
+    })
+
+  const put = (path: string, ...handlers: RequestHandler[]) =>
+    use({
+      method: "PUT",
+      path,
+      handlers,
+    })
+
+  const del = (path: string, ...handlers: RequestHandler[]) =>
+    use({
+      method: "DELETE",
+      path,
+      handlers,
+    })
+
+  const all = (path: string, ...handlers: RequestHandler[]) =>
+    use({
+      method: "ALL",
+      path,
+      handlers,
+    })
+
+  const handle = async (request: RoutedRequest) => {
     const url = new URL(request.url)
     request.query = Object.fromEntries(url.searchParams)
     for (const { method, regex, handlers } of routes) {
@@ -63,8 +103,13 @@ const Router = (): Router => {
 
   return {
     routes,
-    handleRequest,
-    useRoute,
+    handle,
+    use,
+    get,
+    post,
+    put,
+    del,
+    all,
   }
 }
 
