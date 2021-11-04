@@ -75,6 +75,22 @@ describe("Router", () => {
       await router.handle(request)
       expect(handler).toHaveBeenCalledTimes(1)
     })
+    it("adds the base path to the route", async () => {
+      const base = "/base"
+      const router = Router({ base })
+      const handler = jest.fn()
+      handler.mockImplementationOnce(() => new Response())
+      const path = "/path"
+      const route: Route = {
+        path,
+        method: "GET",
+        handlers: [handler],
+      }
+      router.use(route)
+      const request = new Request(`${base}${path}`)
+      await router.handle(request)
+      expect(handler).toHaveBeenCalledTimes(1)
+    })
     it("attaches the query and params to the request", async () => {
       const router = Router()
       const handler = jest.fn()

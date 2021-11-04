@@ -27,15 +27,20 @@ export type Route = {
   regex?: RegExp
 }
 
-const Router = (): Router => {
+type RouterInit = {
+  base: string
+}
+
+const Router = (init?: RouterInit): Router => {
   const routes: Route[] = []
 
   const use = (route: Route) => {
+    const base = init?.base ?? ""
     routes.push({
       regex:
         route.regex ??
         RegExp(
-          `^${route.path
+          `^${(base + route.path)
             .replace(/(\/?)\*/g, "($1.*)?")
             .replace(/\/$/, "")
             .replace(/:(\w+)(\?)?(\.)?/g, "$2(?<$1>[^/]+)$2$3")
