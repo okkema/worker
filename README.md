@@ -1,12 +1,14 @@
-# worker - Cloudflare Worker Web Framework
+# worker
+
+Cloudflare Worker Web Framework
 
 [![NPM](https://nodei.co/npm/@okkema/worker.png?compact=true)](https://www.npmjs.com/package/@okkema/worker)
 
 ## Intro
 
-A simple web framework for Cloudflare Workers. 
+A simple web framework for [Cloudflare Workers](https://workers.cloudflare.com/). 
 
-The package is organized into sub packages:
+This package is organized into sub packages:
 - `core` - core functionality
 - `sentry` - logger for [Sentry](https://sentry.io)
 
