@@ -3,7 +3,7 @@ const path = require("path")
 
 /** @type { import("webpack").Configuration } */
 const config = {
-  entry: "./index.ts",
+  entry: "./src/index.ts",
   output: {
     filename: "worker.js",
     path: path.join(__dirname, "dist"),

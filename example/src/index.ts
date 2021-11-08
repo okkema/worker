@@ -8,7 +8,7 @@ const router = Router()
 router.get("/", async () => new Response("Hello, World!"))
 router.get("/error", async () => {
   throw new Problem({
-    title: "An error occurred",
+    title: "Internal Server Error",
     detail: "Check sentry.io for more info.",
   })
 })

@@ -2,11 +2,11 @@
   "name": "example",
   "version": "1.0.0",
   "description": "@okkema/worker example",
-  "main": "index.js",
+  "main": "./dist/worker.js",
   "scripts": {
     "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "miniflare ./dist/worker.js"
+    "start": "miniflare",
+    "test": "jest"
   },
   "author": "Okkema Labs <correos@okkema.org>",
   "license": "MIT",
@@ -15,8 +15,8 @@
     "@babel/preset-env": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
     "@okkema/worker": "1.4.8",
-    "babel": "^6.23.0",
     "babel-loader": "^8.2.3",
+    "jest": "^27.3.1",
     "miniflare": "^1.4.1",
     "webpack": "^5.62.1",
     "webpack-cli": "^4.9.1"
