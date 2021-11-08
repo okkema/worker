@@ -1,4 +1,4 @@
-import { Unauthorized } from "../core/responses"
+import { Problem } from "../core"
 import { validateToken } from "./validator"
 
 export const Authorizer = (options: {
@@ -16,9 +16,18 @@ export const Authorizer = (options: {
 
   const authorize = async (request: Request): Promise<void | Response> => {
     const token = getTokenFromHeaders(request.headers)
-    if (!token) return Unauthorized("Missing token")
+    if (!token)
+      throw new Problem({
+        status: 401,
+        title: "Unauthorized",
+        detail: "Missing token",
+      })
     if (!(await validateToken(token, audience, issuer)))
-      return Unauthorized("Token invalid")
+      throw new Problem({
+        status: 401,
+        title: "Unauthorized",
+        detail: "Invalid token",
+      })
   }
 
   return {

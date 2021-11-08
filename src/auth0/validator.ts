@@ -1,4 +1,3 @@
-import { TextEncoder } from "util"
 import Problem from "../core/problem"
 import { fetchJWKS } from "./client"
 import { decode } from "./decoder"

@@ -14,7 +14,7 @@ describe("worker", () => {
     const worker = Worker({ handler })
     const request = new Request("/")
     const event = new FetchEvent("fetch", { request })
-    worker.handleEvent(event)
+    worker.handle(event)
     expect(handler).toHaveBeenCalledWith(event)
   })
   it("responds to an event", async () => {
@@ -24,7 +24,7 @@ describe("worker", () => {
     const request = new Request("/")
     const event = new FetchEvent("fetch", { request })
     event.respondWith = jest.fn()
-    const result = await worker.handleEvent(event)
+    const result = await worker.handle(event)
     expect(handler).toHaveBeenCalledWith(event)
     expect(result).toBe(response)
   })
@@ -34,13 +34,13 @@ describe("worker", () => {
       const handler = jest.fn(() => {
         throw error
       })
-      const logError = jest.fn()
-      const worker = Worker({ handler, logger: { logError } })
+      const log = jest.fn()
+      const worker = Worker({ handler, logger: { log } })
       const request = new Request("/")
       const event = new FetchEvent("fetch", { request })
-      worker.handleEvent(event)
+      worker.handle(event)
       expect(handler).toHaveBeenCalledWith(event)
-      expect(logError).toHaveBeenCalledWith(event, error)
+      expect(log).toHaveBeenCalledWith(event, error)
     })
     it("returns problem details if expected", async () => {
       const init = {
@@ -56,14 +56,14 @@ describe("worker", () => {
       const worker = Worker({ handler })
       const request = new Request("/")
       const event = new FetchEvent("fetch", { request })
-      const result = await worker.handleEvent(event)
+      const result = await worker.handle(event)
       expect(handler).toHaveBeenCalledWith(event)
       expect(result.status).toBe(error.status)
       expect(result.statusText).toBe("Problem Details")
       const json = await result.json()
       expect(json).toEqual(init)
     })
-    it("returns an internal server error if unexpected", async () => {
+    it("returns an 500 if unexpected", async () => {
       const error = new Error("error")
       const handler = jest.fn(() => {
         throw error
@@ -71,10 +71,9 @@ describe("worker", () => {
       const worker = Worker({ handler })
       const request = new Request("/")
       const event = new FetchEvent("fetch", { request })
-      const result = await worker.handleEvent(event)
+      const result = await worker.handle(event)
       expect(handler).toHaveBeenCalledWith(event)
       expect(result.status).toBe(500)
-      expect(result.statusText).toBe("Internal Server Error")
       const text = await result.text()
       expect(text).toBe(error.message)
     })

@@ -1,6 +1,6 @@
-import Worker, { Logger } from "./worker"
-import Router from "./router"
+import Worker, { EventHandler, Logger } from "./worker"
+import Router, { RequestHandler, Route } from "./router"
 import Problem from "./problem"
-export * from "./responses"
-export * from "./utils"
-export { Worker, Router, Problem, Logger }
+export { Worker, Router, Problem }
+export type { EventHandler, Logger, RequestHandler, Route }
+export default Worker

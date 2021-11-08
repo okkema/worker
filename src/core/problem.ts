@@ -1,10 +1,10 @@
-type ProblemInit = Omit<Problem, "name" | "message" | "stack">
+type ProblemInit = Pick<Problem, "type" | "title" | "status" | "detail">
 
 class Problem extends Error {
-  type: string
   title: string
-  status: number
   detail: string
+  type?: string
+  status?: number
 
   constructor(init: ProblemInit) {
     super()
@@ -14,7 +14,7 @@ class Problem extends Error {
     // Problem Details
     this.type = init.type
     this.title = init.title
-    this.status = init.status
+    this.status = init.status ?? 500
     this.detail = init.detail
   }
 }

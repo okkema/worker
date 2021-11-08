@@ -1,4 +1,4 @@
-import Problem from "../core/problem"
+import { Problem } from "../core"
 
 export class Auth0ClientError extends Problem {
   constructor(detail: string) {

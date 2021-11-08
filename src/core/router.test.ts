@@ -1,5 +1,5 @@
 import Problem from "./problem"
-import Router, { Route, RoutedRequest } from "./router"
+import Router, { Route } from "./router"
 
 describe("Router", () => {
   describe("routes", () => {
@@ -65,12 +65,7 @@ describe("Router", () => {
       const router = Router()
       const handler = jest.fn()
       handler.mockImplementationOnce(() => new Response())
-      const route: Route = {
-        path: "/",
-        method: "GET",
-        handlers: [handler],
-      }
-      router.use(route)
+      router.get("/", handler)
       const request = new Request("/")
       await router.handle(request)
       expect(handler).toHaveBeenCalledTimes(1)
@@ -81,12 +76,7 @@ describe("Router", () => {
       const handler = jest.fn()
       handler.mockImplementationOnce(() => new Response())
       const path = "/path"
-      const route: Route = {
-        path,
-        method: "GET",
-        handlers: [handler],
-      }
-      router.use(route)
+      router.get(path, handler)
       const request = new Request(`${base}${path}`)
       await router.handle(request)
       expect(handler).toHaveBeenCalledTimes(1)
@@ -94,29 +84,19 @@ describe("Router", () => {
     it("attaches the query and params to the request", async () => {
       const router = Router()
       const handler = jest.fn()
-      handler.mockImplementationOnce((request: RoutedRequest) => {
+      handler.mockImplementationOnce((request) => {
         expect(request.params).toEqual({ id: "123" })
         expect(request.query).toEqual({ key: "value" })
         return new Response()
       })
-      const route: Route = {
-        path: "/:id",
-        method: "GET",
-        handlers: [handler],
-      }
-      router.use(route)
+      router.get("/:id", handler)
       const request = new Request("/123?key=value")
       await router.handle(request)
     })
     it("requires an exact match", async () => {
       const router = Router()
       const handler = jest.fn()
-      const route: Route = {
-        path: "/",
-        method: "GET",
-        handlers: [handler],
-      }
-      router.use(route)
+      router.get("/", handler)
       const request = new Request("/test")
       await router.handle(request)
       expect(handler).not.toHaveBeenCalled()
@@ -125,20 +105,10 @@ describe("Router", () => {
       const router = Router()
       const handler1 = jest.fn()
       handler1.mockImplementationOnce(() => new Response())
-      const route1: Route = {
-        path: "/test/first",
-        method: "GET",
-        handlers: [handler1],
-      }
       const handler2 = jest.fn()
       handler2.mockImplementationOnce(() => new Response())
-      const route2: Route = {
-        path: "/test/:any",
-        method: "GET",
-        handlers: [handler2],
-      }
-      router.use(route1)
-      router.use(route2)
+      router.get("/test/first", handler1)
+      router.get("/test/:any", handler2)
       const request = new Request("/test/first")
       await router.handle(request)
       expect(handler1).toHaveBeenCalledTimes(1)
@@ -148,12 +118,7 @@ describe("Router", () => {
       const router = Router()
       const handler = jest.fn()
       handler.mockImplementation(() => new Response())
-      const route: Route = {
-        path: "/",
-        method: "ALL",
-        handlers: [handler],
-      }
-      router.use(route)
+      router.all("/", handler)
       const request1 = new Request("/", { method: "GET" })
       await router.handle(request1)
       const request2 = new Request("/", { method: "POST" })
@@ -181,12 +146,7 @@ describe("Router", () => {
         expect(request.prev).toBe(2)
         return new Response()
       })
-      const route: Route = {
-        path: "/",
-        method: "GET",
-        handlers: [handler1, handler2, handler3],
-      }
-      router.use(route)
+      router.get("/", handler1, handler2, handler3)
       const request = new Request("/")
       await router.handle(request)
       expect(handler1).toHaveBeenCalledTimes(1)
@@ -201,12 +161,7 @@ describe("Router", () => {
         return true
       })
       const handler3 = jest.fn()
-      const route: Route = {
-        path: "/",
-        method: "GET",
-        handlers: [handler1, handler2, handler3],
-      }
-      router.use(route)
+      router.get("/", handler1, handler2, handler3)
       const request = new Request("/")
       await router.handle(request)
       expect(handler1).toHaveBeenCalledTimes(1)
@@ -215,12 +170,7 @@ describe("Router", () => {
     })
     it("throws a problem if a route does not return a response", async () => {
       const router = Router()
-      const route: Route = {
-        path: "/",
-        method: "GET",
-        handlers: [],
-      }
-      router.use(route)
+      router.get("/")
       const request = new Request("/")
       await expect(router.handle(request)).rejects.toThrowError(Problem)
     })
@@ -243,7 +193,7 @@ describe("Router", () => {
         })
         it("DELETE", async () => {
           const router = Router()
-          router.del("/")
+          router.delete("/")
           expect(router.routes[0].method).toBe("DELETE")
         })
         it("ALL", async () => {
@@ -259,15 +209,9 @@ describe("Router", () => {
         const path = "/foo/-.abc!@%&_=:;',~|/bar"
         const handler = jest.fn()
         handler.mockImplementation(
-          (request: RoutedRequest) =>
-            new Response(JSON.stringify(request.params)),
+          (request) => new Response(JSON.stringify(request.params)),
         )
-        const route: Route = {
-          path: path,
-          method: "GET",
-          handlers: [handler],
-        }
-        router.use(route)
+        router.get(path, handler)
         const request = new Request(path)
         await router.handle(request)
         expect(handler).toHaveBeenCalledTimes(1)
