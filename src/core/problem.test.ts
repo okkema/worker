@@ -16,4 +16,10 @@ describe("Problem", () => {
     expect(result.status).toBe(init.status)
     expect(result.detail).toBe(init.detail)
   })
+  it("uses the default values", () => {
+    const init = { title: "title", detail: "detail" }
+    const result = new Problem(init)
+    expect(result.type).toBeUndefined()
+    expect(result.status).toBe(500)
+  })
 })

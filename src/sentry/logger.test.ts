@@ -1,4 +1,4 @@
-import SentryLogger from "./logger"
+import Logger from "./logger"
 
 describe("logger", () => {
   it("calls the Sentry API", async () => {
@@ -9,8 +9,8 @@ describe("logger", () => {
     const event = new FetchEvent("fetch", { request })
     const error = new Error()
     const DSN = "http://localhost"
-    const logger = SentryLogger({ DSN })
-    await logger.logError(event, error)
+    const logger = Logger({ DSN })
+    await logger.log(event, error)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),
       expect.any(Object),
@@ -27,8 +27,8 @@ describe("logger", () => {
     const event = new FetchEvent("fetch", { request })
     const error = new Error()
     const DSN = "http://localhost"
-    const logger = SentryLogger({ DSN })
-    const result = await logger.logError(event, error)
+    const logger = Logger({ DSN })
+    const result = await logger.log(event, error)
     expect(result).toBe(ok)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),
@@ -45,8 +45,8 @@ describe("logger", () => {
     const event = new FetchEvent("fetch", { request })
     const error = new Error()
     const DSN = "http://localhost"
-    const logger = SentryLogger({ DSN })
-    const result = await logger.logError(event, error)
+    const logger = Logger({ DSN })
+    const result = await logger.log(event, error)
     expect(result).toBe(false)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),

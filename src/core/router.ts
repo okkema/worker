@@ -1,21 +1,23 @@
 import Problem from "./problem"
 
-export type RoutedRequest = Request & {
+type RoutedRequest = Request & {
   query?: { [key: string]: string }
   params?: { [key: string]: string }
 }
 
-type RequestHandler = (request: RoutedRequest) => Promise<Response>
+export type RequestHandler = (request: RoutedRequest) => Promise<Response>
+
+type RouteHandler = (path: string, ...handlers: RequestHandler[]) => void
 
 type Router = {
   routes: Route[]
-  handle: RequestHandler
   use: (route: Route) => void
-  get: (path: string, ...handlers: RequestHandler[]) => void
-  post: (path: string, ...handlers: RequestHandler[]) => void
-  put: (path: string, ...handlers: RequestHandler[]) => void
-  del: (path: string, ...handlers: RequestHandler[]) => void
-  all: (path: string, ...handlers: RequestHandler[]) => void
+  handle: RequestHandler
+  get: RouteHandler
+  post: RouteHandler
+  put: RouteHandler
+  delete: RouteHandler
+  all: RouteHandler
 }
 
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "ALL"
@@ -33,9 +35,9 @@ type RouterInit = {
 
 const Router = (init?: RouterInit): Router => {
   const routes: Route[] = []
+  const base = init?.base ?? ""
 
   const use = (route: Route) => {
-    const base = init?.base ?? ""
     routes.push({
       regex:
         route.regex ??
@@ -50,71 +52,58 @@ const Router = (init?: RouterInit): Router => {
     })
   }
 
-  const get = (path: string, ...handlers: RequestHandler[]) =>
-    use({
-      method: "GET",
-      path,
-      handlers,
-    })
-
-  const post = (path: string, ...handlers: RequestHandler[]) =>
-    use({
-      method: "POST",
-      path,
-      handlers,
-    })
-
-  const put = (path: string, ...handlers: RequestHandler[]) =>
-    use({
-      method: "PUT",
-      path,
-      handlers,
-    })
-
-  const del = (path: string, ...handlers: RequestHandler[]) =>
-    use({
-      method: "DELETE",
-      path,
-      handlers,
-    })
-
-  const all = (path: string, ...handlers: RequestHandler[]) =>
-    use({
-      method: "ALL",
-      path,
-      handlers,
-    })
-
-  const handle = async (request: RoutedRequest) => {
-    const url = new URL(request.url)
-    request.query = Object.fromEntries(url.searchParams)
-    for (const { method, regex, handlers } of routes) {
-      const match = url.pathname.match(regex)
-      if (match && (method === request.method || method === "ALL")) {
-        request.params = match.groups
-        for (const handler of handlers) {
-          const response = await handler(request)
-          if (response !== undefined) return response
-        }
-        throw new Problem({
-          detail: "Please contact the admin with the request details.",
-          status: 500,
-          title: "The route handlers did not return a response",
-          type: "NoResponse",
-        })
-      }
-    }
-  }
-
   return {
     routes,
-    handle,
     use,
-    get,
-    post,
-    put,
-    del,
-    all,
+    handle: async (request: RoutedRequest) => {
+      const url = new URL(request.url)
+      request.query = Object.fromEntries(url.searchParams)
+      for (const { method, regex, handlers } of routes) {
+        const match = url.pathname.match(regex)
+        if (match && (method === request.method || method === "ALL")) {
+          request.params = match.groups
+          for (const handler of handlers) {
+            const response = await handler(request)
+            if (response !== undefined) return response
+          }
+        }
+      }
+      throw new Problem({
+        detail: "The router did not return an response.",
+        status: 404,
+        title: "Not Found",
+      })
+    },
+    get: (path, ...handlers) =>
+      use({
+        method: "GET",
+        path,
+        handlers,
+      }),
+    post: (path, ...handlers) =>
+      use({
+        method: "POST",
+        path,
+        handlers,
+      }),
+    put: (path, ...handlers) =>
+      use({
+        method: "PUT",
+        path,
+        handlers,
+      }),
+    delete: (path, ...handlers) =>
+      use({
+        method: "DELETE",
+        path,
+        handlers,
+      }),
+    all: (path, ...handlers) =>
+      use({
+        method: "ALL",
+        path,
+        handlers,
+      }),
   }
 }
 

@@ -1,7 +1,11 @@
 import Problem from "./problem"
-import { InternalServerError, ProblemDetails } from "./responses"
+import { sanitize } from "../utils"
 
-type EventHandler = (event: FetchEvent) => Promise<Response>
+export type EventHandler = (event: FetchEvent) => Promise<Response>
+
+export type Logger = {
+  log: (event: FetchEvent, error: Error) => Promise<boolean>
+}
 
 type WorkerInit = {
   handler: EventHandler
@@ -9,38 +13,40 @@ type WorkerInit = {
 }
 
 type Worker = {
-  handleEvent: EventHandler
-}
-
-export type Logger = {
-  logError: (event: FetchEvent, error: Error) => Promise<boolean>
+  handle: EventHandler
 }
 
 const Worker = (init: WorkerInit): Worker => {
   const { handler, logger } = init
 
-  const handleError = async (event: FetchEvent, error: Error) => {
-    if (logger) await logger.logError(event, error)
-    if (error instanceof Problem) return ProblemDetails(error)
-    return InternalServerError(error.message)
-  }
-
-  const handleEvent = async (event: FetchEvent) => {
-    let response
+  const handle = async (event: FetchEvent) => {
     try {
-      response = await handler(event)
+      return await handler(event)
     } catch (error) {
-      response = await handleError(event, error)
+      if (logger) await logger.log(event, error)
+      if (error instanceof Problem) {
+        const { detail, status, title, type } = error
+        return new Response(
+          JSON.stringify(sanitize({ detail, status, title, type })),
+          {
+            status,
+            statusText: "Problem Details",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        )
+      }
+      return new Response(error.message, { status: 500 })
     }
-    return response
   }
 
   addEventListener("fetch", (event) => {
-    event.respondWith(handleEvent(event))
+    event.respondWith(handle(event))
   })
 
   return {
-    handleEvent,
+    handle,
   }
 }
 

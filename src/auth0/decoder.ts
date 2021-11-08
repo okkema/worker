@@ -1,5 +1,5 @@
-import Problem from "../core/problem"
-import base64 from "../core/utils/base64"
+import { Problem } from "../core"
+import { base64 } from "../utils"
 
 export class Auth0DecoderError extends Problem {
   constructor(detail: string) {

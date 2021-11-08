@@ -9,7 +9,7 @@ Cloudflare Worker Web Framework
 A simple web framework for [Cloudflare Workers](https://workers.cloudflare.com/). 
 
 This package is organized into sub packages:
-- `core` - core functionality
+- `core` - core functionality exported at root
 - `sentry` - logger for [Sentry](https://sentry.io)
 
 Heavily ~~ripped from~~ *inspired by*: [^1]
@@ -20,11 +20,13 @@ Heavily ~~ripped from~~ *inspired by*: [^1]
 [^1]: MIT FTW
 ## Usage
 
+Check out the [example](/example) for more details.
+
 ### Worker
 
 ```ts
-import Worker from "@okkema/worker"          // import like this
-import { Worker } from "@okkema/worker/core" // or like this
+import Worker from "@okkema/worker"     // import like this
+import { Worker } from "@okkema/worker" // or like this
 
 const handler = async (event: FetchEvent) => {
   const { request } = event
@@ -40,7 +42,7 @@ Worker({ handler })
 ### Router
 
 ```ts
-import { Router, Worker } from "@okkema/worker/core"
+import { Router, Worker } from "@okkema/worker"
 
 const router = Router({
   base: "/api", // this is optional
@@ -63,13 +65,12 @@ Worker({
 
 ### Problem Details
 ```ts
-import { Problem, Worker } from "@okkema/worker/core"
+import { Problem, Worker } from "@okkema/worker"
 
 Worker({
   handler: (event) => {
     // returns a Problem Details response
     throw new Problem({
-      type: "MyTerribleError",
       title: "Check out the RFC for more details",
       detail: "https://datatracker.ietf.org/doc/html/rfc7807",
       status: 500,
@@ -80,7 +81,7 @@ Worker({
 
 ### Sentry Logger
 ```ts
-import { Worker } from "@okkema/worker/core"
+import { Worker } from "@okkema/worker"
 import { Logger } from "@okkema/worker/sentry"
 
 const DSN = "YOUR_SENTRY_DSN" // https://docs.sentry.io/product/sentry-basics/dsn-explainer/
@@ -97,10 +98,10 @@ Worker({
 You can also implement your own loggers!
 
 ```ts
-import { Logger } from "@okkema/worker/core" // import the type for code completion
+import { Logger } from "@okkema/worker" // import the type for code completion
 
 const mySuperLogger: Logger = {
-  logError: async (event: FetchEvent, error: Error) => {
+  log: async (event: FetchEvent, error: Error) => {
     
     // log your error wherever...
     
