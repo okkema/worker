@@ -25,7 +25,7 @@ Check out the [example](/example) for more details.
 ### Worker
 
 ```ts
-import Worker from "@okkema/worker"          // import like this
+import Worker from "@okkema/worker"     // import like this
 import { Worker } from "@okkema/worker" // or like this
 
 const handler = async (event: FetchEvent) => {
