@@ -6,7 +6,7 @@ declare const SENTRY_DSN: string
 const router = Router()
 
 router.get("/", async () => new Response("Hello, World!"))
-router.get("/", async () => {
+router.get("/error", async () => {
   throw new Problem({
     title: "An error occurred",
     detail: "Check sentry.io for more info.",

@@ -66,13 +66,13 @@ const Router = (init?: RouterInit): Router => {
             const response = await handler(request)
             if (response !== undefined) return response
           }
-          throw new Problem({
-            detail: "The router did not return an response.",
-            status: 404,
-            title: "Not Found",
-          })
         }
       }
+      throw new Problem({
+        detail: "The router did not return an response.",
+        status: 404,
+        title: "Not Found",
+      })
     },
     get: (path, ...handlers) =>
       use({

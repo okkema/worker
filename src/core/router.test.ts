@@ -98,7 +98,7 @@ describe("Router", () => {
       const handler = jest.fn()
       router.get("/", handler)
       const request = new Request("/test")
-      await router.handle(request)
+      await expect(router.handle(request)).rejects.toThrowError(Problem)
       expect(handler).not.toHaveBeenCalled()
     })
     it("returns the first match found", async () => {
