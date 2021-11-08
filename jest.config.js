@@ -7,6 +7,7 @@ const config = {
   moduleNameMapper: {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
+  transformIgnorePatterns: ["/node_modules/(?!typed-array-utils?)"],
 }
 
 module.exports = config

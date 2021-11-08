@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Cloudflare Worker Web Framework",
   "files": [
     "dist"
@@ -14,13 +14,17 @@
       ],
       "sentry": [
         "./dist/sentry/index.d.ts"
+      ],
+      "stripe": [
+        "./dist/stripe/index.d.ts"
       ]
     }
   },
   "exports": {
     ".": "./dist/core/index.js",
     "./utils": "./dist/utils/index.js",
-    "./sentry": "./dist/sentry/index.js"
+    "./sentry": "./dist/sentry/index.js",
+    "./stripe": "./dist/stripe/index.js"
   },
   "scripts": {
     "build": "npm-run-all build:babel build:tsc",
@@ -80,5 +84,8 @@
     "prettier": "^2.3.0",
     "service-worker-mock": "^2.0.5",
     "typescript": "^4.3.2"
+  },
+  "dependencies": {
+    "typed-array-utils": "^0.2.2"
   }
 }
