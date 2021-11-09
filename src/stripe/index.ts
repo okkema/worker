@@ -1,2 +1,3 @@
 import Webhook from "./webhook"
-export { Webhook }
+import Sessions from "./sessions"
+export { Webhook, Sessions }
