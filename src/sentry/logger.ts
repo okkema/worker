@@ -1,56 +1,60 @@
-import { Logger } from "../core"
-import { uuid } from "../utils"
+import type { Logger } from "../core"
+import { uuid, sanitize } from "../utils"
 
 declare const PACKAGE_NAME: string
 declare const PACKAGE_VERSION: string
 
 type SentryLoggerInit = {
   DSN: string
+  environment?: string
 }
 
 const SentryLogger = (init: SentryLoggerInit): Logger => {
   const { DSN } = init
+  const environment = init.environment ?? "production"
   const { origin, pathname, username } = new URL(DSN)
-  const name = PACKAGE_NAME
-  const version = PACKAGE_VERSION
-  const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${name}`
-
-  const log = async (event: FetchEvent, error: Error) => {
-    try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          event_id: uuid(),
-          timestamp: new Date().toISOString().substr(0, 19),
-          sdk: {
-            name,
-            version,
-          },
-          level: "error",
-          transaction: event.request.url,
-          server_name: "cloudflare",
-          exception: {
-            values: [
-              {
-                type: error.name,
-                value: error.message,
-              },
-            ],
-          },
-          request: {
-            url: event.request.url,
-            method: event.request.method,
-          },
-        }),
-      })
-      return response.ok
-    } catch (error) {
-      return false
-    }
-  }
+  const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${PACKAGE_VERSION}`
 
   return {
-    log,
+    error: async (event, error) => {
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          body: JSON.stringify(
+            sanitize({
+              event_id: uuid(),
+              timestamp: new Date().toISOString().substr(0, 19),
+              platform: "javascript",
+              sdk: {
+                name: PACKAGE_NAME,
+                version: PACKAGE_VERSION,
+              },
+              level: "error",
+              transaction:
+                (event as FetchEvent).request?.url ??
+                (event as ScheduledEvent).scheduledTime,
+              server_name: "cloudflare",
+              environment,
+              exception: {
+                values: [
+                  {
+                    type: error.name,
+                    value: error.message,
+                  },
+                ],
+              },
+              request: {
+                url: (event as FetchEvent).request?.url,
+                method: (event as FetchEvent).request?.method,
+              },
+            }),
+          ),
+        })
+        return response.ok
+      } catch (error) {
+        return false
+      }
+    },
   }
 }
 
