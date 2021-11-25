@@ -34,7 +34,7 @@
     "lint": "eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint '**/*.{js,ts,json}' --fix",
     "postpublish": "npm run clean",
-    "prepack": "npm-run-all clean lint build test",
+    "prepack": "npm-run-all clean lint build test:verbose",
     "prepare": "husky install",
     "test": "jest",
     "test:update": "jest --updateSnapshot",

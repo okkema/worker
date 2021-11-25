@@ -14,25 +14,23 @@ jobs:
       - name: Checkout
         id: checkout
         uses: actions/checkout@v2
-
       - name: Setup Node
         id: node
         uses: actions/setup-node@v2
         with:
           node-version: 14.x
-
+          registry-url: 'https://registry.npmjs.org'
       - name: Install
         id: install
         run: npm ci
-
       - name: Build
         id: build
         run: npm run build
-
       - name: Test
         id: test
         run: npm run test:verbose
-
       - name: Publish
         id: Publish
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
