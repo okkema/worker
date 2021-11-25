@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Cloudflare Worker Web Framework",
   "files": [
     "dist"
