@@ -7,6 +7,11 @@ describe("worker", () => {
   it("throws a problem if no handlers are registered", () => {
     expect(() => Worker({})).toThrow(Problem)
   })
+  it("does not attach listeners when specified", () => {
+    Object.assign(global, { addEventListener: jest.fn() })
+    Worker({ fetch: jest.fn(), scheduled: jest.fn(), listen: false })
+    expect(addEventListener).not.toBeCalled()
+  })
   describe("fetch", () => {
     it("listens for an event", () => {
       Object.assign(global, { addEventListener: jest.fn() })
@@ -93,8 +98,36 @@ describe("worker", () => {
       const scheduled = jest.fn()
       const worker = Worker({ scheduled })
       const event = jest.fn()
-      worker.scheduled(event as any)
+      await worker.scheduled(event as never)
       expect(scheduled).toHaveBeenCalledWith(event)
+    })
+    describe("on error", () => {
+      it("catches and forwards the error", async () => {
+        const err = new Error()
+        const scheduled = jest.fn(() => {
+          throw err
+        })
+        const worker = Worker({ scheduled })
+        const event = {
+          waitUntil: jest.fn(),
+        }
+        await expect(worker.scheduled(event as never)).rejects.toThrow(Error)
+        expect(scheduled).toHaveBeenCalledWith(event)
+      })
+      it("calls the logger if present", async () => {
+        const err = new Error()
+        const scheduled = jest.fn(() => {
+          throw err
+        })
+        const error = jest.fn()
+        const worker = Worker({ scheduled, logger: { error } })
+        const event = {
+          waitUntil: jest.fn(),
+        }
+        await expect(worker.scheduled(event as never)).rejects.toThrow(Error)
+        expect(scheduled).toHaveBeenCalledWith(event)
+        expect(error).toHaveBeenCalledWith(event, err)
+      })
     })
   })
 })

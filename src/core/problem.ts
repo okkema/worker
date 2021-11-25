@@ -1,7 +1,21 @@
 import { sanitize } from "../utils"
 
+/**
+ * @typedef {object} ProblemInit
+ * @property {string} [type]
+ * @property {string} title
+ * @property {number} [status] Default: 500
+ * @property {string} details
+ */
 type ProblemInit = Pick<Problem, "type" | "title" | "status" | "detail">
 
+/**
+ * A customizable error. Used to generate a Problem Details response.
+ * @extends {Error}
+ * @constructor
+ * @param {ProblemInit} init
+ * @see https://datatracker.ietf.org/doc/html/rfc7807
+ */
 class Problem extends Error {
   title: string
   detail: string

@@ -1,5 +1,10 @@
 import randomize from "./randomize"
 
+/**
+ * Generates a version 4 UUID.
+ * @returns {string} UUID v4
+ * @see https://datatracker.ietf.org/doc/html/rfc4122
+ */
 const uuid = (): string => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (char) => {
     let array

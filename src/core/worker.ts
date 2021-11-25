@@ -1,13 +1,37 @@
 import Problem from "./problem"
 
+/**
+ * @typedef {Function} FetchEventHandler
+ * @param {FetchEvent} event
+ * @returns {Promise<Response>}
+ */
 export type FetchEventHandler = (event: FetchEvent) => Promise<Response>
 
+/**
+ * @typedef {Function} ScheduledEventHandler
+ * @param {ScheduledEvent} event
+ * @returns {Promise<void>}
+ */
 export type ScheduledEventHandler = (event: ScheduledEvent) => Promise<void>
 
+/**
+ * @typedef {object} Logger
+ * @property {Function} error
+ * @param {FetchEvent|ScheduledEvent} event
+ * @param {Error} error
+ * @returns {Promise<boolean>} Value indicates success.
+ */
 export type Logger = {
   error: (event: FetchEvent | ScheduledEvent, error: Error) => Promise<boolean>
 }
 
+/**
+ * @typedef {object} WorkerInit
+ * @property {FetchEventHandler} fetch
+ * @property {ScheduledEventHandler} scheduled
+ * @property {Logger} [logger]
+ * @property {boolean} [listen] Indicates whether to add event listeners automatically.
+ */
 type WorkerInit = {
   fetch?: FetchEventHandler
   scheduled?: ScheduledEventHandler
@@ -15,6 +39,11 @@ type WorkerInit = {
   listen?: boolean
 }
 
+/**
+ * @typedef {object} Worker
+ * @property {FetchEventHandler} fetch
+ * @property {ScheduledEventHandler} scheduled
+ */
 type Worker = {
   fetch: FetchEventHandler
   scheduled: ScheduledEventHandler
