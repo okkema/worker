@@ -1,52 +1,97 @@
 import Problem from "./problem"
-import { sanitize } from "../utils"
 
-export type EventHandler = (event: FetchEvent) => Promise<Response>
+/**
+ * @typedef {Function} FetchEventHandler
+ * @param {FetchEvent} event
+ * @returns {Promise<Response>}
+ */
+export type FetchEventHandler = (event: FetchEvent) => Promise<Response>
 
+/**
+ * @typedef {Function} ScheduledEventHandler
+ * @param {ScheduledEvent} event
+ * @returns {Promise<void>}
+ */
+export type ScheduledEventHandler = (event: ScheduledEvent) => Promise<void>
+
+/**
+ * @typedef {object} Logger
+ * @property {Function} error
+ * @param {FetchEvent|ScheduledEvent} event
+ * @param {Error} error
+ * @returns {Promise<boolean>} Value indicates success.
+ */
 export type Logger = {
-  log: (event: FetchEvent, error: Error) => Promise<boolean>
+  error: (event: FetchEvent | ScheduledEvent, error: Error) => Promise<boolean>
 }
 
+/**
+ * @typedef {object} WorkerInit
+ * @property {FetchEventHandler} fetch
+ * @property {ScheduledEventHandler} scheduled
+ * @property {Logger} [logger]
+ * @property {boolean} [listen] Indicates whether to add event listeners automatically.
+ */
 type WorkerInit = {
-  handler: EventHandler
+  fetch?: FetchEventHandler
+  scheduled?: ScheduledEventHandler
   logger?: Logger
+  listen?: boolean
 }
 
+/**
+ * @typedef {object} Worker
+ * @property {FetchEventHandler} fetch
+ * @property {ScheduledEventHandler} scheduled
+ */
 type Worker = {
-  handle: EventHandler
+  fetch: FetchEventHandler
+  scheduled: ScheduledEventHandler
 }
 
 const Worker = (init: WorkerInit): Worker => {
-  const { handler, logger } = init
+  const { fetch, scheduled, logger, listen = true } = init
 
-  const handle = async (event: FetchEvent) => {
+  const handleFetch = async (event: FetchEvent) => {
     try {
-      return await handler(event)
+      return fetch(event)
     } catch (error) {
-      if (logger) await logger.log(event, error)
-      if (error instanceof Problem) {
-        const { detail, status, title, type } = error
-        return new Response(
-          JSON.stringify(sanitize({ detail, status, title, type })),
-          {
-            status,
-            statusText: "Problem Details",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          },
-        )
-      }
+      if (logger) event.waitUntil(logger.error(event, error))
+      if (error instanceof Problem) return error.response
       return new Response(error.message, { status: 500 })
     }
   }
 
-  addEventListener("fetch", (event) => {
-    event.respondWith(handle(event))
-  })
+  const handleScheduled = async (event: ScheduledEvent) => {
+    try {
+      return scheduled(event)
+    } catch (error) {
+      if (logger) event.waitUntil(logger.error(event, error))
+      throw error
+    }
+  }
+
+  if (!fetch && !scheduled)
+    throw new Problem({
+      title: "Worker initialization failed",
+      detail: "An event handler must be provided.",
+    })
+
+  if (listen && fetch) {
+    addEventListener("fetch", (event) => {
+      event.respondWith(handleFetch(event))
+    })
+  }
+
+  if (listen && scheduled) {
+    addEventListener("scheduled", (event) => {
+      event.waitUntil(handleScheduled(event))
+    })
+  }
 
   return {
-    handle,
+    fetch: handleFetch,
+    scheduled: handleScheduled,
   }
 }
 

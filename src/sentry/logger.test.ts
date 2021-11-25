@@ -10,7 +10,7 @@ describe("logger", () => {
     const error = new Error()
     const DSN = "http://localhost"
     const logger = Logger({ DSN })
-    await logger.log(event, error)
+    await logger.error(event, error)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),
       expect.any(Object),
@@ -28,7 +28,7 @@ describe("logger", () => {
     const error = new Error()
     const DSN = "http://localhost"
     const logger = Logger({ DSN })
-    const result = await logger.log(event, error)
+    const result = await logger.error(event, error)
     expect(result).toBe(ok)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),
@@ -46,7 +46,7 @@ describe("logger", () => {
     const error = new Error()
     const DSN = "http://localhost"
     const logger = Logger({ DSN })
-    const result = await logger.log(event, error)
+    const result = await logger.error(event, error)
     expect(result).toBe(false)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),

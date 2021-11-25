@@ -14,6 +14,6 @@ router.get("/error", async () => {
 })
 
 Worker({
-  handler: (event) => router.handle(event.request),
+  fetch: (event) => router.handle(event.request),
   logger: Logger({ DSN: SENTRY_DSN }),
 })
