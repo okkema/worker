@@ -31,11 +31,13 @@ export type Route = {
 
 type RouterInit = {
   base: string
+  problem?: boolean
 }
 
 const Router = (init?: RouterInit): Router => {
   const routes: Route[] = []
   const base = init?.base ?? ""
+  const problem = init?.problem ?? true
 
   const use = (route: Route) => {
     routes.push({
@@ -68,11 +70,12 @@ const Router = (init?: RouterInit): Router => {
           }
         }
       }
-      throw new Problem({
-        detail: "The router did not return an response.",
-        status: 404,
-        title: "Not Found",
-      })
+      if (problem)
+        throw new Problem({
+          detail: "The router did not return an response.",
+          status: 404,
+          title: "Not Found",
+        })
     },
     get: (path, ...handlers) =>
       use({

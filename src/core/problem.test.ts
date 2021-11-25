@@ -9,8 +9,8 @@ describe("Problem", () => {
       type: "type",
     }
     const result = new Problem(init)
-    expect(result.name).toBe("Problem")
-    expect(result.message).toBe(init.title)
+    expect(result.name).toBe(init.title)
+    expect(result.message).toBe(init.detail)
     expect(result.type).toBe(init.type)
     expect(result.title).toBe(init.title)
     expect(result.status).toBe(init.status)

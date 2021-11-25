@@ -10,6 +10,7 @@ const config = {
       ],
       ignore: ["**/*.d.ts", "**/*.test.ts"],
       plugins: [["babel-plugin-add-import-extension", { extension: "js" }]],
+      comments: false,
     },
   },
   presets: [
