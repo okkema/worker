@@ -2,7 +2,11 @@
 
 Cloudflare Worker Web Framework
 
-[![NPM](https://nodei.co/npm/@okkema/worker.png?compact=true)](https://www.npmjs.com/package/@okkema/worker)
+![npm (scoped)](https://img.shields.io/npm/v/@okkema/worker)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/okkema/worker/Publish)
+![GitHub issues](https://img.shields.io/github/issues/okkema/worker)
+![GitHub](https://img.shields.io/github/license/okkema/worker)
+![npm bundle size (scoped)](https://img.shields.io/bundlephobia/min/@okkema/worker)
 
 ## Intro
 
