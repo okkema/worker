@@ -1,4 +1,5 @@
 import Problem from "./problem"
+import CORS from "./cors"
 
 /**
  * @typedef {Function} FetchEventHandler
@@ -37,6 +38,7 @@ type WorkerInit = {
   scheduled?: ScheduledEventHandler
   logger?: Logger
   listen?: boolean
+  cors?: true | CORS
 }
 
 /**
@@ -50,16 +52,21 @@ type Worker = {
 }
 
 const Worker = (init: WorkerInit): Worker => {
-  const { fetch, scheduled, logger, listen = true } = init
+  const { fetch, scheduled, logger, listen = true, cors } = init
 
   const handleFetch = async (event: FetchEvent) => {
+    const { request } = event
+    let response: Response
     try {
-      return fetch(event)
+      response = await fetch(event)
     } catch (error) {
       if (logger) event.waitUntil(logger.error(event, error))
-      if (error instanceof Problem) return error.response
-      return new Response(error.message, { status: 500 })
+      if (error instanceof Problem) response = error.response
+      else response = new Response(error.message, { status: 500 })
     }
+    if (cors)
+      response = CORS(request, response, typeof cors === "boolean" ? {} : cors)
+    return response
   }
 
   const handleScheduled = async (event: ScheduledEvent) => {
