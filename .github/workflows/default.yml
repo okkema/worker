@@ -1,14 +1,13 @@
-name: Production
+name: Publish
 
 on:
   push:
     branches:
       - main
-  pull_request:
 
 jobs:
-  build-test-publish:
-    name: Build Test Publish
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -23,12 +22,6 @@ jobs:
       - name: Install
         id: install
         run: npm ci
-      - name: Build
-        id: build
-        run: npm run build
-      - name: Test
-        id: test
-        run: npm run test:verbose
       - name: Publish
         id: Publish
         run: npm publish
