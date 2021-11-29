@@ -1,17 +1,6 @@
 import Problem from "../core/problem"
 import { fetchJWKS } from "./client"
-import { decode } from "./decoder"
-
-export class Auth0ValidatorError extends Problem {
-  constructor(detail: string) {
-    super({
-      detail,
-      status: 401,
-      title: "The token is invalid",
-      type: "Auth0ValidationError",
-    })
-  }
-}
+import decode from "./decode"
 
 export const validateToken = async (
   token: string,
@@ -53,10 +42,16 @@ const validateSignature = async (jwt: JWT, token: string) => {
   const keys = await Promise.all(jwks.keys.map(importKey))
   const key = keys.find((x) => x.kid === jwt.header.kid)
   if (!key)
-    throw new Auth0ValidatorError(`No matching JWK found: ${jwt.header.kid}`)
+    throw new Problem({
+      title: "JWT Signature Validation Error",
+      detail: `No matching JWK found: ${jwt.header.kid}`,
+    })
   try {
     if (!(await verifySignature(jwt, token, key.key)))
-      throw new Auth0ValidatorError("Invalid JWT signature")
+      throw new Problem({
+        title: "JWT Signature Validation Error",
+        detail: "Invalid JWT signature",
+      })
   } catch (error) {
     console.log(error)
   }
@@ -64,24 +59,48 @@ const validateSignature = async (jwt: JWT, token: string) => {
 
 const validateExpiration = (jwt: JWT) => {
   const expiration = new Date(0)
-  if (!jwt.payload?.exp) throw new Auth0ValidatorError("Missing JWT expiration")
+  if (!jwt.payload?.exp)
+    throw new Problem({
+      title: "JWT Expiration Validation Error",
+      detail: "Missing JWT expiration",
+    })
   expiration.setUTCSeconds(jwt.payload.exp)
   const now = new Date(Date.now())
-  if (expiration <= now) throw new Auth0ValidatorError("JWT is expired")
+  if (expiration <= now)
+    throw new Problem({
+      title: "JWT Expiration Validation Error",
+      detail: "JWT is expired",
+    })
 }
 
 const validatePayload = (jwt: JWT, audience: string, issuer: string) => {
   if (jwt.payload?.aud !== audience)
-    throw new Auth0ValidatorError(`Invalid JWT audience: ${jwt.payload?.aud}`)
+    throw new Problem({
+      title: "JWT Payload Validation Error",
+      detail: `Invalid JWT audience: ${jwt.payload?.aud}`,
+    })
   if (jwt.payload?.iss !== issuer)
-    throw new Auth0ValidatorError(`Invalid JWT issuer: ${jwt.payload?.iss}`)
+    throw new Problem({
+      title: "JWT Payload Validation Error",
+      detail: `Invalid JWT issuer: ${jwt.payload?.iss}`,
+    })
   validateExpiration(jwt)
 }
 
 const validateHeader = (jwt: JWT) => {
   if (jwt.header?.typ !== "JWT")
-    throw new Auth0ValidatorError(`Invalid JWT type: ${jwt.header?.typ}`)
+    throw new Problem({
+      title: "JWT Header Validation Error",
+      detail: `Invalid JWT type: ${jwt.header?.typ}`,
+    })
   if (jwt.header?.alg !== "RS256")
-    throw new Auth0ValidatorError(`Invalid JWT algorithm: ${jwt.header?.alg}`)
-  if (!jwt.header?.kid) throw new Auth0ValidatorError("Missing JWT key id")
+    throw new Problem({
+      title: "JWT Header Validation Error",
+      detail: `Invalid JWT algorithm: ${jwt.header?.alg}`,
+    })
+  if (!jwt.header?.kid)
+    throw new Problem({
+      title: "JWT Header Validation Error",
+      detail: "Missing JWT key id",
+    })
 }

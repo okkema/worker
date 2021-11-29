@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Auth0ValidatorError, validateToken } from "./validator"
-import { decode } from "./decoder"
+import decode from "./decode"
 import { fetchJWKS } from "./client"
 import { JWK, JWS } from "node-jose"
 import base64 from "../utils/base64"
 
-jest.mock("./decoder", () => ({
-  decode: jest.fn(),
-}))
+jest.mock("./decode", () => jest.fn())
 
 jest.mock("./client", () => ({
   fetchJWKS: jest.fn(),

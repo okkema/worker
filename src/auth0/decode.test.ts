@@ -1,4 +1,5 @@
-import { Auth0DecoderError, decode } from "./decoder"
+import { Problem } from "../core"
+import decode from "./decode"
 
 describe("decoder", () => {
   it("decodes a valid token", () => {
@@ -10,6 +11,6 @@ describe("decoder", () => {
   })
   it("throws an error when token is invalid", () => {
     const token = "some.bad.token"
-    expect(() => decode(token)).toThrow(Auth0DecoderError)
+    expect(() => decode(token)).toThrow(Problem)
   })
 })
