@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Cloudflare Worker Web Framework",
   "files": [
     "dist"
@@ -20,6 +20,9 @@
       ],
       "sendgrid": [
         "./dist/sendgrid/index.d.ts"
+      ],
+      "cloudflare": [
+        "./dist/cloudflare/index.d.ts"
       ]
     }
   },
@@ -28,7 +31,8 @@
     "./utils": "./dist/utils/index.js",
     "./sentry": "./dist/sentry/index.js",
     "./stripe": "./dist/stripe/index.js",
-    "./sendgrid": "./dist/sendgrid/index.js"
+    "./sendgrid": "./dist/sendgrid/index.js",
+    "./cloudflare": "./dist/cloudflare/index.js"
   },
   "scripts": {
     "build": "npm-run-all build:babel build:tsc",
