@@ -1,29 +1,35 @@
-import Problem from "../core/problem"
-import { fetchJWKS } from "./client"
-import decode from "./decode"
+import { base64 } from "../utils"
+import { Problem } from "../core"
+import JWK from "./jwk"
 
-export const validateToken = async (
-  token: string,
-  audience: string,
-  issuer: string,
-): Promise<boolean> => {
-  const jwt = decode(token)
-  validateHeader(jwt)
-  validatePayload(jwt, audience, issuer)
-  await validateSignature(jwt, token)
-  return true
+type JWT = {
+  header: {
+    alg: string
+    typ: string
+    kid: string
+  }
+  payload: {
+    iss: string
+    sub: string
+    aud: string
+    exp: number
+  }
+  signature: string
 }
 
-const importKey = async (jwk: JWK) => {
-  return {
-    kid: jwk.kid,
-    key: await crypto.subtle.importKey(
-      "jwk",
-      jwk,
-      { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-      false,
-      ["verify"],
-    ),
+const decode = (token: string): JWT => {
+  try {
+    const [header, payload, signature] = token.split(".")
+    return {
+      header: JSON.parse(atob(header)),
+      payload: JSON.parse(atob(payload)),
+      signature: base64.encode(signature),
+    }
+  } catch (error) {
+    throw new Problem({
+      title: "JWT Decode Error",
+      detail: `Unable to decode JWT: ${error}`,
+    })
   }
 }
 
@@ -38,8 +44,8 @@ const verifySignature = (jwt: JWT, token: string, key: CryptoKey) => {
 }
 
 const validateSignature = async (jwt: JWT, token: string) => {
-  const jwks = await fetchJWKS(jwt.payload.iss)
-  const keys = await Promise.all(jwks.keys.map(importKey))
+  const jwks = await JWK.fetch(jwt.payload.iss)
+  const keys = await Promise.all(jwks.keys.map(JWK.import))
   const key = keys.find((x) => x.kid === jwt.header.kid)
   if (!key)
     throw new Problem({
@@ -103,4 +109,28 @@ const validateHeader = (jwt: JWT) => {
       title: "JWT Header Validation Error",
       detail: "Missing JWT key id",
     })
+}
+
+export default {
+  decode,
+  get: (request: Request): string => {
+    const [type, token] = request.headers.get("Authorization")?.split(" ")
+    if (type !== "Bearer")
+      throw new Problem({
+        title: "JWT Error",
+        detail: "Expected 'Bearer' token",
+        status: 401,
+      })
+    return token
+  },
+  validate: async (
+    token: string,
+    audience: string,
+    issuer: string,
+  ): Promise<void> => {
+    const jwt = decode(token)
+    validateHeader(jwt)
+    validatePayload(jwt, audience, issuer)
+    await validateSignature(jwt, token)
+  },
 }

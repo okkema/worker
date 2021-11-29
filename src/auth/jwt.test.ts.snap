@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`decoder decodes a valid token 1`] = `
+exports[`JWT decode decodes a valid token 1`] = `
 Object {
   "header": Object {
     "alg": "HS256",
