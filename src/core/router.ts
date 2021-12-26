@@ -5,7 +5,9 @@ type RoutedRequest = Request & {
   params?: { [key: string]: string }
 }
 
-export type RequestHandler = (request: RoutedRequest) => Promise<Response>
+export type RequestHandler = (
+  request: RoutedRequest,
+) => Promise<Response | void>
 
 type RouteHandler = (path: string, ...handlers: RequestHandler[]) => void
 
