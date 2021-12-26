@@ -25,7 +25,7 @@ export default {
   fetch: async (issuer: string): Promise<{ keys: JWK[] }> => {
     const url = new URL(issuer)
     if (!url.pathname.endsWith("/")) url.pathname += "/"
-    url.pathname += "./well-known/jwks.json"
+    url.pathname += ".well-known/jwks.json"
     const resp = await fetch(url.href)
     if (!resp.ok)
       throw new Problem({

@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Cloudflare Worker Web Framework",
   "files": [
     "dist"
@@ -9,6 +9,9 @@
   "types": "./dist/core/index.d.ts",
   "typesVersions": {
     "*": {
+      "auth": [
+        "./dist/auth/index.d.ts"
+      ],
       "utils": [
         "./dist/utils/index.d.ts"
       ],
@@ -28,6 +31,7 @@
   },
   "exports": {
     ".": "./dist/core/index.js",
+    "./auth": "./dist/auth/index.js",
     "./utils": "./dist/utils/index.js",
     "./sentry": "./dist/sentry/index.js",
     "./stripe": "./dist/stripe/index.js",

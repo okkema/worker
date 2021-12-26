@@ -11,7 +11,7 @@ type JWT = {
   payload: {
     iss: string
     sub: string
-    aud: string
+    aud: string[]
     exp: number
   }
   signature: string
@@ -77,7 +77,7 @@ const validateExpiration = (jwt: DecodedJWT) => {
       title: "JWT Expiration Validation Error",
       detail: "Missing JWT expiration",
     })
-  expiration.setUTCMilliseconds(exp)
+  expiration.setUTCSeconds(exp)
   const now = new Date(Date.now())
   if (expiration <= now)
     throw new Problem({
@@ -92,10 +92,10 @@ const validatePayload = (jwt: DecodedJWT, audience: string, issuer: string) => {
       payload: { aud, iss },
     },
   } = jwt
-  if (aud !== audience)
+  if (!aud.includes(audience))
     throw new Problem({
       title: "JWT Payload Validation Error",
-      detail: `Invalid JWT audience: ${aud}`,
+      detail: `Invalid JWT audience: ${aud.join(",")}`,
     })
   if (iss !== issuer)
     throw new Problem({

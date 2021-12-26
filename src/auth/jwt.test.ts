@@ -15,8 +15,8 @@ const createJWT = () => ({
       typ: "JWT",
     },
     payload: {
-      aud: "audience",
-      exp: Date.now() + 1000,
+      aud: ["audience"],
+      exp: Date.now() / 1000 + 1000,
       iss: "issuer",
       sub: "subject",
     },
@@ -79,7 +79,7 @@ describe("JWT", () => {
         const audience = "audience"
         const issuer = "issuer"
         const jwt = createJWT()
-        jwt.decoded.payload.aud = "invalid"
+        jwt.decoded.payload.aud = ["invalid"]
         await expect(JWT.validate(jwt, audience, issuer)).rejects.toThrow(
           Problem,
         )
@@ -87,7 +87,6 @@ describe("JWT", () => {
       it("throws an error if the issuer is invalid", async () => {
         const audience = "audience"
         const issuer = "issuer"
-        const token = "token"
         const jwt = createJWT()
         jwt.decoded.payload.iss = "invalid"
         await expect(JWT.validate(jwt, audience, issuer)).rejects.toThrow(
@@ -107,7 +106,7 @@ describe("JWT", () => {
         const audience = "audience"
         const issuer = "issuer"
         const jwt = createJWT()
-        jwt.decoded.payload.exp = Date.now()
+        jwt.decoded.payload.exp = new Date(Date.now()).getUTCSeconds()
         await expect(JWT.validate(jwt, audience, issuer)).rejects.toThrow(
           Problem,
         )
