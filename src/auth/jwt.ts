@@ -54,15 +54,11 @@ const validateSignature = async (jwt: DecodedJWT) => {
       title: "JWT Signature Validation Error",
       detail: `No matching JWK found: ${kid}`,
     })
-  try {
-    if (!(await verifySignature(jwt, key.key)))
-      throw new Problem({
-        title: "JWT Signature Validation Error",
-        detail: "Invalid JWT signature",
-      })
-  } catch (error) {
-    console.log(error)
-  }
+  if (!(await verifySignature(jwt, key.key)))
+    throw new Problem({
+      title: "JWT Signature Validation Error",
+      detail: "Invalid JWT signature",
+    })
 }
 
 const validateExpiration = (jwt: DecodedJWT) => {
