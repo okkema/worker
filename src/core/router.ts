@@ -14,7 +14,7 @@ type RouteHandler = (path: string, ...handlers: RequestHandler[]) => void
 type Router = {
   routes: Route[]
   use: (route: Route) => void
-  handle: RequestHandler
+  handle: (request: RoutedRequest) => Promise<Response>
   get: RouteHandler
   post: RouteHandler
   put: RouteHandler
@@ -32,14 +32,12 @@ export type Route = {
 }
 
 type RouterInit = {
-  base: string
+  base?: string
   problem?: boolean
 }
 
-const Router = (init?: RouterInit): Router => {
+const Router = ({ base = "", problem = true }: RouterInit): Router => {
   const routes: Route[] = []
-  const base = init?.base ?? ""
-  const problem = init?.problem ?? true
 
   const use = (route: Route) => {
     routes.push({
@@ -68,7 +66,7 @@ const Router = (init?: RouterInit): Router => {
           request.params = match.groups
           for (const handler of handlers) {
             const response = await handler(request)
-            if (response !== undefined) return response
+            if (response) return response
           }
         }
       }
@@ -78,6 +76,7 @@ const Router = (init?: RouterInit): Router => {
           status: 404,
           title: "Not Found",
         })
+      return new Response("Not Found", { status: 404 })
     },
     get: (path, ...handlers) =>
       use({

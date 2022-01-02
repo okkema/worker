@@ -51,9 +51,13 @@ type Worker = {
   scheduled: ScheduledEventHandler
 }
 
-const Worker = (init: WorkerInit): Worker => {
-  const { fetch, scheduled, logger, listen = true, cors } = init
-
+const Worker = ({
+  fetch,
+  scheduled,
+  logger,
+  listen = true,
+  cors,
+}: WorkerInit): Worker => {
   const handleFetch = async (event: FetchEvent) => {
     const { request } = event
     let response: Response
