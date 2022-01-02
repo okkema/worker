@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { base64 } from "../utils"
 import { Problem } from "../core"
 import JWK from "./jwk"
@@ -39,7 +40,7 @@ const verifySignature = (jwt: DecodedJWT, key: CryptoKey) => {
   )
 }
 
-const validateSignature = async (jwt: DecodedJWT) => {
+const validateSignature = async (jwt: DecodedJWT): Promise<void> => {
   const {
     decoded: {
       header: { kid },
@@ -54,7 +55,8 @@ const validateSignature = async (jwt: DecodedJWT) => {
       title: "JWT Signature Validation Error",
       detail: `No matching JWK found: ${kid}`,
     })
-  if (!(await verifySignature(jwt, key.key)))
+  const valid = await verifySignature(jwt, key.key)
+  if (!valid)
     throw new Problem({
       title: "JWT Signature Validation Error",
       detail: "Invalid JWT signature",
@@ -124,15 +126,39 @@ const validateHeader = (jwt: DecodedJWT) => {
     })
 }
 
+const decodeSignature = (signature: string): string => {
+  switch (signature.length % 4) {
+    case 0:
+      break
+    case 2:
+      signature + "=="
+      break
+    case 3:
+      signature + "="
+      break
+    default:
+      throw new Problem({
+        title: "JWT Signature Decode Error",
+        detail: "Invalid JWT signature",
+      })
+  }
+  signature = atob(signature.replace(/_/g, "/").replace(/-/g, "+"))
+  try {
+    return base64.decode(signature)
+  } catch {
+    return signature
+  }
+}
+
 export default {
   decode: (token: string): DecodedJWT => {
     try {
       const [header, payload, signature] = token.split(".")
       return {
         decoded: {
-          header: JSON.parse(atob(header)),
-          payload: JSON.parse(atob(payload)),
-          signature: base64.encode(signature),
+          header: JSON.parse(base64.decode(header)),
+          payload: JSON.parse(base64.decode(payload)),
+          signature: decodeSignature(signature),
         },
         raw: {
           header,
