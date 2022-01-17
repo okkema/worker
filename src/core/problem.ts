@@ -26,7 +26,7 @@ class Problem extends Error {
   constructor(init: ProblemInit) {
     super()
     // Error
-    this.name = init.title
+    this.name = init.title.replace(/\s/g, "")
     this.message = init.detail
     // Problem Details
     this.type = init.type
