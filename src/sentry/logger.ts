@@ -36,12 +36,14 @@ const SentryLogger = ({
                 (event as ScheduledEvent).scheduledTime,
               server_name: "cloudflare",
               environment,
-              exception: [
-                {
-                  type: error.name,
-                  value: error.message,
-                },
-              ],
+              exception: {
+                values: [
+                  {
+                    type: error.name,
+                    value: error.message,
+                  },
+                ],
+              },
               request: {
                 url: (event as FetchEvent).request?.url,
                 method: (event as FetchEvent).request?.method,
