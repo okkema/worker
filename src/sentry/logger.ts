@@ -9,9 +9,10 @@ type SentryLoggerInit = {
   environment?: string
 }
 
-const SentryLogger = (init: SentryLoggerInit): Logger => {
-  const { DSN } = init
-  const environment = init.environment ?? "production"
+const SentryLogger = ({
+  DSN,
+  environment = "production",
+}: SentryLoggerInit): Logger => {
   const { origin, pathname, username } = new URL(DSN)
   const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${PACKAGE_VERSION}`
 
@@ -35,14 +36,12 @@ const SentryLogger = (init: SentryLoggerInit): Logger => {
                 (event as ScheduledEvent).scheduledTime,
               server_name: "cloudflare",
               environment,
-              exception: {
-                values: [
-                  {
-                    type: error.name,
-                    value: error.message,
-                  },
-                ],
-              },
+              exception: [
+                {
+                  type: error.name,
+                  value: error.message,
+                },
+              ],
               request: {
                 url: (event as FetchEvent).request?.url,
                 method: (event as FetchEvent).request?.method,

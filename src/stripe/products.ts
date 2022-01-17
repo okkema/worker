@@ -14,7 +14,10 @@ const Products = (init: ProductsInit): Products => {
   const api = Api({ secret })
   const base = "https://api.stripe.com/v1/products"
   return {
-    update: (product) => api.fetch(`${base}/${product.id}`, "POST", product),
+    update: (product) => {
+      const { id, ...rest } = product
+      return api.fetch(`${base}/${id}`, "POST", rest)
+    },
   }
 }
 

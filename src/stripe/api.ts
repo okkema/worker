@@ -5,7 +5,7 @@ type StripeApi = {
   fetch: <T>(
     url: string,
     method?: "GET" | "POST" | "PUT" | "DELETE",
-    body?: Record<string, unknown>,
+    body?: unknown,
   ) => Promise<T>
 }
 
