@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "0.0.14",
+  "version": "0.0.15-0",
   "description": "Cloudflare Worker Web Framework",
   "files": [
     "dist"
@@ -39,15 +39,13 @@
     "./cloudflare": "./dist/cloudflare/index.js"
   },
   "scripts": {
-    "build": "npm-run-all build:babel build:tsc",
-    "build:babel": "babel ./src -d ./dist -x .ts --env-name production",
-    "build:tsc": "tsc -b tsconfig.build.json",
+    "build": "tsc",
     "clean": "rm -rf ./dist",
     "lint": "eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint '**/*.{js,ts,json}' --fix",
+    "postinstall": "git config core.hooksPath .githooks",
     "postpublish": "npm run clean",
     "prepack": "npm-run-all clean lint build test:verbose",
-    "prepare": "husky install",
     "test": "jest",
     "test:update": "jest --updateSnapshot",
     "test:verbose": "jest --verbose"

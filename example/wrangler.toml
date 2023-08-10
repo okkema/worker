@@ -1,8 +1,0 @@
-[build]
-command = "npm run build"
-
-[triggers]
-crons = ["0 * * * *"]
-
-[miniflare]
-port = 1234

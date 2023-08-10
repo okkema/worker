@@ -1,22 +1,27 @@
-import { Miniflare } from "miniflare"
+import { unstable_dev } from "wrangler"
+import type { UnstableDevWorker } from "wrangler"
+import { describe, expect, it, beforeAll, afterAll } from "vitest"
 
-describe("example", () => {
-  let mf: Miniflare
-  beforeAll(() => {
-    mf = new Miniflare()
+describe("Worker", () => {
+  let worker: UnstableDevWorker
+
+  beforeAll(async () => {
+    worker = await unstable_dev("src/index.ts", {
+      experimental: {
+        disableExperimentalWarning: true,
+      },
+    })
   })
-  it("returns a 200", async () => {
-    const res = await mf.dispatchFetch("http://localhost:8787/")
-    expect(res.status).toBe(200)
-    const text = await res.text()
-    expect(text).toBe("Hello, World!")
+
+  afterAll(async () => {
+    await worker.stop()
   })
-  it("returns a problem", async () => {
-    const res = await mf.dispatchFetch("http://localhost:8787/error")
-    expect(res.status).toBe(500)
-    const json = await res.json()
-    expect(json.title).toBe("Internal Server Error")
-    expect(json.detail).toBe("Check sentry.io for more info.")
-    expect(json.status).toBe(res.status)
+
+  it("should return 200 response", async () => {
+    const req = new Request("https://example.com", { method: "GET" })
+    const resp = await worker.fetch(req.url)
+    expect(resp.status).toBe(200)
+    const text = await resp.text()
+    expect(text).toBe("success")
   })
 })

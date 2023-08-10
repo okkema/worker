@@ -1,6 +1,13 @@
 {
-  "moduleResolution": "node",
   "compilerOptions": {
-    "lib": ["ES2015", "WebWorker"]
-  }
+    "noEmit": true,
+    "module": "esnext",
+    "target": "esnext",
+    "lib": ["esnext", "webworker"],
+    "strict": true,
+    "moduleResolution": "node",
+    "types": ["@cloudflare/workers-types"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules"]
 }
