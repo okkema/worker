@@ -3,7 +3,7 @@
 Cloudflare Worker Web Framework
 
 ![Version](https://img.shields.io/npm/v/@okkema/worker)
-![Status](https://img.shields.io/github/workflow/status/okkema/worker/push-example)
+![Example](https://img.shields.io/github/workflow/status/okkema/worker/push-example.yaml?branch=main)
 ![Issues](https://img.shields.io/github/issues/okkema/worker)
 ![License](https://img.shields.io/github/license/okkema/worker)
 ![Size](https://img.shields.io/bundlephobia/min/@okkema/worker)
