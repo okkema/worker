@@ -1,4 +1,4 @@
-import JWK from "./jwk"
+import { JWK } from "./jwk"
 import { Problem } from "../core"
 
 describe("JWK", () => {

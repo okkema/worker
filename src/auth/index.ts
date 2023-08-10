@@ -1,3 +1,2 @@
-import JWT from "./jwt"
-import JWK from "./jwk"
-export { JWT, JWK }
+export * from "./jwt"
+export * from "./jwk"

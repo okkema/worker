@@ -1,9 +1,9 @@
 /* eslint-disable indent */
 import { base64 } from "../utils"
 import { Problem } from "../core"
-import JWK from "./jwk"
+import { JWK } from "./jwk"
 
-type JWT = {
+export type JsonWebToken = {
   header: {
     alg: string
     typ: string
@@ -18,8 +18,8 @@ type JWT = {
   signature: string
 }
 
-type DecodedJWT = {
-  decoded: JWT
+export type DecodedJsonWebToken = {
+  decoded: JsonWebToken
   raw: {
     header: string
     payload: string
@@ -27,7 +27,7 @@ type DecodedJWT = {
   }
 }
 
-const verifySignature = (jwt: DecodedJWT, key: CryptoKey) => {
+function verifySignature(jwt: DecodedJsonWebToken, key: CryptoKey) {
   const {
     decoded: { signature },
     raw: { header, payload },
@@ -40,7 +40,7 @@ const verifySignature = (jwt: DecodedJWT, key: CryptoKey) => {
   )
 }
 
-const validateSignature = async (jwt: DecodedJWT): Promise<void> => {
+async function validateSignature(jwt: DecodedJsonWebToken): Promise<void> {
   const {
     decoded: {
       header: { kid },
@@ -63,7 +63,7 @@ const validateSignature = async (jwt: DecodedJWT): Promise<void> => {
     })
 }
 
-const validateExpiration = (jwt: DecodedJWT) => {
+function validateExpiration(jwt: DecodedJsonWebToken) {
   const {
     decoded: {
       payload: { exp },
@@ -84,7 +84,11 @@ const validateExpiration = (jwt: DecodedJWT) => {
     })
 }
 
-const validatePayload = (jwt: DecodedJWT, audience: string, issuer: string) => {
+function validatePayload(
+  jwt: DecodedJsonWebToken,
+  audience: string,
+  issuer: string,
+) {
   const {
     decoded: {
       payload: { aud, iss },
@@ -103,7 +107,7 @@ const validatePayload = (jwt: DecodedJWT, audience: string, issuer: string) => {
   validateExpiration(jwt)
 }
 
-const validateHeader = (jwt: DecodedJWT) => {
+function validateHeader(jwt: DecodedJsonWebToken) {
   const {
     decoded: {
       header: { typ, alg, kid },
@@ -126,7 +130,7 @@ const validateHeader = (jwt: DecodedJWT) => {
     })
 }
 
-const decodeSignature = (signature: string): string => {
+function decodeSignature(signature: string): string {
   switch (signature.length % 4) {
     case 0:
       break
@@ -150,8 +154,8 @@ const decodeSignature = (signature: string): string => {
   }
 }
 
-export default {
-  decode: (token: string): DecodedJWT => {
+export const JWT = {
+  decode(token: string): DecodedJsonWebToken {
     try {
       const [header, payload, signature] = token.split(".")
       return {
@@ -173,7 +177,7 @@ export default {
       })
     }
   },
-  get: (request: Request): string => {
+  get(request: Request): string {
     const header = request.headers.get("Authorization")
     if (!header)
       throw new Problem({
@@ -199,11 +203,11 @@ export default {
       })
     return token
   },
-  validate: async (
-    jwt: DecodedJWT,
+  async validate(
+    jwt: DecodedJsonWebToken,
     audience: string,
     issuer: string,
-  ): Promise<void> => {
+  ): Promise<void> {
     validateHeader(jwt)
     validatePayload(jwt, audience, issuer)
     await validateSignature(jwt)

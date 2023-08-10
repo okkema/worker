@@ -1,10 +1,12 @@
-import JWT from "./jwt"
-import JWK from "./jwk"
+import { JWT } from "./jwt"
+import { JWK } from "./jwk"
 import { Problem } from "../core"
 
 jest.mock("./jwk", () => ({
-  fetch: jest.fn(),
-  import: jest.fn(),
+  JWK: {
+    fetch: jest.fn(),
+    import: jest.fn(),
+  },
 }))
 
 const createJWT = () => ({
