@@ -26,7 +26,7 @@ const config = {
     "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "_" }],
   },
-  ignorePatterns: ["node_modules", "dist"],
+  ignorePatterns: ["node_modules", "dist", "coverage"],
 }
 
 module.exports = config

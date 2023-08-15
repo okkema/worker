@@ -1,7 +1,7 @@
 {
   "name": "@okkema/worker",
-  "version": "0.0.15-2",
-  "description": "Cloudflare Worker Web Framework",
+  "version": "1.0.0",
+  "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
   ],
@@ -35,6 +35,7 @@
     "postpublish": "npm run clean",
     "prepack": "npm-run-all clean lint build test:verbose",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "test:update": "jest --updateSnapshot",
     "test:verbose": "jest --verbose"
   },
@@ -43,16 +44,18 @@
     "url": "git+https://github.com/okkema/worker.git"
   },
   "keywords": [
+    "cloudflare",
     "okkema",
-    "worker",
-    "cloudflare"
+    "toolkit",
+    "workers"
   ],
   "author": "Okkema Labs <correos@okkema.org>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/okkema/worker/issues"
   },
-  "homepage": "https://github.com/okkema/worker#readme",
+  "homepage": "https://worker.okkema.org",
+  "readme": "https://github.com/okkema/worker#readme",
   "devDependencies": {
     "@babel/core": "^7.15.0",
     "@babel/preset-env": "^7.15.0",

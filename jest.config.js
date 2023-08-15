@@ -1,7 +1,7 @@
 /** @type { import("@jest/types").Config.InitialOptions } */
 const config = {
   testPathIgnorePatterns: ["./node_modules", "./dist", "./example"],
-  collectCoverageFrom: ["./src/**/*.{ts,js}"],
+  collectCoverageFrom: ["./src/**/*.{ts,js}", "!./src/**/index.ts"],
   setupFilesAfterEnv: ["./jest.setup.js"],
   snapshotResolver: "./jest.snapshots.js",
   moduleNameMapper: {
