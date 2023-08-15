@@ -1,4 +1,4 @@
-import Logger from "./logger"
+import { SentryLogger } from "./logger"
 
 describe("logger", () => {
   it("calls the Sentry API", async () => {
@@ -6,11 +6,10 @@ describe("logger", () => {
       fetch: jest.fn(),
     })
     const request = new Request("/")
-    const event = new FetchEvent("fetch", { request })
     const error = new Error()
     const DSN = "http://localhost"
-    const logger = Logger({ DSN })
-    await logger.error(event, error)
+    const logger = SentryLogger({ DSN })
+    await logger.error(request, error)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),
       expect.any(Object),
@@ -24,11 +23,10 @@ describe("logger", () => {
       }),
     })
     const request = new Request("/")
-    const event = new FetchEvent("fetch", { request })
     const error = new Error()
     const DSN = "http://localhost"
-    const logger = Logger({ DSN })
-    const result = await logger.error(event, error)
+    const logger = SentryLogger({ DSN })
+    const result = await logger.error(request, error)
     expect(result).toBe(ok)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),
@@ -42,11 +40,10 @@ describe("logger", () => {
       }),
     })
     const request = new Request("/")
-    const event = new FetchEvent("fetch", { request })
     const error = new Error()
     const DSN = "http://localhost"
-    const logger = Logger({ DSN })
-    const result = await logger.error(event, error)
+    const logger = SentryLogger({ DSN })
+    const result = await logger.error(request, error)
     expect(result).toBe(false)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining(DSN),

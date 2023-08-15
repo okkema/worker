@@ -1,29 +1,29 @@
 import type { Logger } from "../core"
-import { uuid, sanitize } from "../utils"
+import { sanitize } from "../utils"
 
-declare const PACKAGE_NAME: string
-declare const PACKAGE_VERSION: string
+const PACKAGE_NAME = "@okkema/worker"
+const PACKAGE_VERSION = "development"
 
 type SentryLoggerInit = {
   DSN: string
   environment?: string
 }
 
-const SentryLogger = ({
+export function SentryLogger({
   DSN,
   environment = "production",
-}: SentryLoggerInit): Logger => {
+}: SentryLoggerInit): Logger {
   const { origin, pathname, username } = new URL(DSN)
   const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${PACKAGE_VERSION}`
 
   return {
-    error: async (event, error) => {
+    async error(event, error) {
       try {
         const response = await fetch(url, {
           method: "POST",
           body: JSON.stringify(
             sanitize({
-              event_id: uuid(),
+              event_id: crypto.randomUUID(),
               timestamp: new Date().toISOString().substr(0, 19),
               platform: "javascript",
               sdk: {
@@ -32,7 +32,7 @@ const SentryLogger = ({
               },
               level: "error",
               transaction:
-                (event as FetchEvent).request?.url ??
+                (event as Request)?.url ??
                 (event as ScheduledEvent).scheduledTime,
               server_name: "cloudflare",
               environment,
@@ -45,8 +45,8 @@ const SentryLogger = ({
                 ],
               },
               request: {
-                url: (event as FetchEvent).request?.url,
-                method: (event as FetchEvent).request?.method,
+                url: (event as Request)?.url,
+                method: (event as Request)?.method,
               },
             }),
           ),
@@ -58,5 +58,3 @@ const SentryLogger = ({
     },
   }
 }
-
-export default SentryLogger

@@ -121,12 +121,12 @@ describe("JWT", () => {
         const jwt = createJWT()
         const mockFetch = JWK.fetch as jest.MockedFunction<typeof JWK.fetch>
         mockFetch.mockImplementationOnce(async () => ({
-          keys: [jest.fn() as any],
+          keys: [jest.fn() as any], // eslint-disable-line @typescript-eslint/no-explicit-any
         }))
         const mockImport = JWK.import as jest.MockedFunction<typeof JWK.import>
         mockImport.mockImplementationOnce(async () => ({
           kid: "",
-          key: jest.fn() as any,
+          key: jest.fn() as any, // eslint-disable-line @typescript-eslint/no-explicit-any
         }))
         await expect(JWT.validate(jwt, audience, issuer)).rejects.toThrow(
           Problem,

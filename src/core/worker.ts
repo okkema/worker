@@ -1,109 +1,101 @@
-import Problem from "./problem"
-import CORS from "./cors"
+import { Problem } from "./problem"
+
+/**
+ * @typedef {Object} Environment - Cloudflare Worker environment
+ */
+type Environment = Record<string, unknown>
 
 /**
  * @typedef {Function} FetchEventHandler
- * @param {FetchEvent} event
- * @returns {Promise<Response>}
+ * @param {Request} request - HTTP request
+ * @param {Environment} [environment] - Cloudflare Worker environment
+ * @param {ExecutionContext} [context] - Cloudflare Worker execution context
+ * @returns {(Response|Promise<Response>)}
  */
-export type FetchEventHandler = (event: FetchEvent) => Promise<Response>
+export type FetchEventHandler = (
+  request: Request,
+  environment?: Environment,
+  context?: ExecutionContext,
+) => Response | Promise<Response>
 
 /**
  * @typedef {Function} ScheduledEventHandler
- * @param {ScheduledEvent} event
- * @returns {Promise<void>}
+ * @param {ScheduledEvent} event - Scheduled event
+ * @param {Environment} [environment] - Cloudflare Worker environment
+ * @param {ExecutionContext} [context] - Cloudflare Worker execution context
+ * @returns {(void|Promise<void>)}
  */
-export type ScheduledEventHandler = (event: ScheduledEvent) => Promise<void>
+export type ScheduledEventHandler = (
+  event: ScheduledEvent,
+  environment?: Environment,
+  context?: ExecutionContext,
+) => void | Promise<void>
 
 /**
- * @typedef {object} Logger
- * @property {Function} error
- * @param {FetchEvent|ScheduledEvent} event
- * @param {Error} error
- * @returns {Promise<boolean>} Value indicates success.
+ * @typedef {Function} ErrorHandler
+ * @param {(Request|ScheduledEvent)} event - HTTP request or scheduled event depending on handler
+ * @param {Error} error - Javascript error
+ * @param {Environment} [environment] - Cloudflare Worker environment
+ * @returns {Promise<boolean>} - Indicates whether the error was handled
+ */
+export type ErrorHandler = (
+  event: Request | ScheduledEvent,
+  error: Error,
+  environment?: Environment,
+) => Promise<boolean>
+
+/**
+ * @typedef {Object} Logger
+ * @property {ErrorHandler} error
  */
 export type Logger = {
-  error: (event: FetchEvent | ScheduledEvent, error: Error) => Promise<boolean>
+  error: ErrorHandler
 }
 
 /**
  * @typedef {object} WorkerInit
- * @property {FetchEventHandler} fetch
- * @property {ScheduledEventHandler} scheduled
+ * @property {FetchEventHandler} [fetch] - Fetch event handler
+ * @property {ScheduledEventHandler} [scheduled] - Scheduled event handler
  * @property {Logger} [logger]
- * @property {boolean} [listen] Indicates whether to add event listeners automatically.
  */
 type WorkerInit = {
   fetch?: FetchEventHandler
   scheduled?: ScheduledEventHandler
   logger?: Logger
-  listen?: boolean
-  cors?: true | CORS
 }
 
 /**
  * @typedef {object} Worker
- * @property {FetchEventHandler} fetch
- * @property {ScheduledEventHandler} scheduled
+ * @property {FetchEventHandler} [fetch] - Fetch event handler
+ * @property {ScheduledEventHandler} [scheduled] - Scheduled event handler
  */
 type Worker = {
-  fetch: FetchEventHandler
-  scheduled: ScheduledEventHandler
+  fetch?: FetchEventHandler
+  scheduled?: ScheduledEventHandler
 }
 
-const Worker = ({
-  fetch,
-  scheduled,
-  logger,
-  listen = true,
-  cors,
-}: WorkerInit): Worker => {
-  const handleFetch = async (event: FetchEvent) => {
-    const { request } = event
-    let response: Response
-    try {
-      response = await fetch(event)
-    } catch (error) {
-      if (logger) event.waitUntil(logger.error(event, error))
-      if (error instanceof Problem) response = error.response
-      else response = new Response(error.message, { status: 500 })
-    }
-    if (cors)
-      response = CORS(request, response, typeof cors === "boolean" ? {} : cors)
-    return response
-  }
-
-  const handleScheduled = async (event: ScheduledEvent) => {
-    try {
-      return scheduled(event)
-    } catch (error) {
-      if (logger) event.waitUntil(logger.error(event, error))
-      throw error
-    }
-  }
-
-  if (!fetch && !scheduled)
-    throw new Problem({
-      title: "Worker initialization failed",
-      detail: "An event handler must be provided.",
-    })
-
-  if (listen && fetch) {
-    addEventListener("fetch", (event) => {
-      event.respondWith(handleFetch(event))
-    })
-  }
-
-  if (listen && scheduled) {
-    addEventListener("scheduled", (event) => {
-      event.waitUntil(handleScheduled(event))
-    })
-  }
-
+export function Worker(init: WorkerInit): Worker {
   return {
-    fetch: handleFetch,
-    scheduled: handleScheduled,
+    async fetch(request, environment, context) {
+      let response: Response
+      try {
+        response = await init.fetch(request, environment)
+      } catch (error) {
+        if (init.logger)
+          context.waitUntil(init.logger.error(request, error, environment))
+        if (error instanceof Problem) response = error.response
+        else response = new Response(error.message, { status: 500 })
+      }
+      return response
+    },
+    async scheduled(event, environment, context) {
+      try {
+        await init.scheduled(event, environment)
+      } catch (error) {
+        if (init.logger)
+          context.waitUntil(init.logger.error(event, error, environment))
+        throw error
+      }
+    },
   }
 }
-
-export default Worker

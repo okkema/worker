@@ -3,11 +3,12 @@
  * @param {object} obj Dirty object
  * @returns {object} Sanitized object
  */
-const sanitize = (obj: Record<string, unknown>): Record<string, unknown> => {
+export function sanitize(
+  obj: Record<string, unknown>,
+): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(obj)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([key, value]) => !(value === null || value === undefined))
+      .filter(([_, value]) => !(value === null || value === undefined))
       .map(([key, value]) => [
         key,
         value === Object(value)
@@ -16,5 +17,3 @@ const sanitize = (obj: Record<string, unknown>): Record<string, unknown> => {
       ]),
   )
 }
-
-export default sanitize

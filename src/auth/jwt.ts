@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { base64 } from "../utils"
+import { urlSafeDecodeBase64 } from "../utils"
 import { Problem } from "../core"
 import { JWK } from "./jwk"
 
@@ -148,7 +148,7 @@ function decodeSignature(signature: string): string {
   }
   signature = atob(signature.replace(/_/g, "/").replace(/-/g, "+"))
   try {
-    return base64.decode(signature)
+    return urlSafeDecodeBase64(signature)
   } catch {
     return signature
   }
@@ -160,8 +160,8 @@ export const JWT = {
       const [header, payload, signature] = token.split(".")
       return {
         decoded: {
-          header: JSON.parse(base64.decode(header)),
-          payload: JSON.parse(base64.decode(payload)),
+          header: JSON.parse(urlSafeDecodeBase64(header)),
+          payload: JSON.parse(urlSafeDecodeBase64(payload)),
           signature: decodeSignature(signature),
         },
         raw: {

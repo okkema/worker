@@ -1,4 +1,4 @@
-import sanitize from "./sanitze"
+import { sanitize } from "./sanitze"
 
 describe("sanitize", () => {
   it("removes null and undefined values", () => {

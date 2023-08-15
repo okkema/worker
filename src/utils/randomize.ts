@@ -1,4 +1,3 @@
-const randomize = (length: number): Uint8Array =>
-  crypto.getRandomValues(new Uint8Array(length))
-
-export default randomize
+export function randomize(length: number): Uint8Array {
+  return crypto.getRandomValues(new Uint8Array(length))
+}

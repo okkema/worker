@@ -1,4 +1,4 @@
-import Problem from "./problem"
+import { Problem } from "./problem"
 
 describe("Problem", () => {
   it("sets the init values", () => {

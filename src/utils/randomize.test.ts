@@ -1,4 +1,4 @@
-import randomize from "./randomize"
+import { randomize } from "./randomize"
 
 describe("randomize", () => {
   it("retuns the specified length", () => {

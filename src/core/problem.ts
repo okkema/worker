@@ -7,7 +7,7 @@ import { sanitize } from "../utils"
  * @property {number} [status] Default: 500
  * @property {string} details
  */
-type ProblemInit = Pick<Problem, "type" | "title" | "status" | "detail">
+export type ProblemInit = Pick<Problem, "type" | "title" | "status" | "detail">
 
 /**
  * A customizable error. Used to generate a Problem Details response.
@@ -16,7 +16,7 @@ type ProblemInit = Pick<Problem, "type" | "title" | "status" | "detail">
  * @param {ProblemInit} init
  * @see https://datatracker.ietf.org/doc/html/rfc7807
  */
-class Problem extends Error {
+export class Problem extends Error {
   title: string
   detail: string
   type?: string
@@ -53,5 +53,3 @@ class Problem extends Error {
     )
   }
 }
-
-export default Problem

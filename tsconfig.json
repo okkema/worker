@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "lib": ["esnext", "webworker"],
-    "types": ["@cloudflare/workers-types", "@types/jest", "node"],
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"],
     "esModuleInterop": true,
     "declaration": true,
     "moduleResolution": "node",
