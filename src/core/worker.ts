@@ -3,7 +3,7 @@ import { Problem } from "./problem"
 /**
  * @typedef {Object} Environment - Cloudflare Worker environment
  */
-type Environment = Record<string, unknown>
+export type Environment = Record<string, unknown>
 
 /**
  * @typedef {Function} FetchEventHandler
