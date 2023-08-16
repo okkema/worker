@@ -1,11 +1,10 @@
-name: release
+name: push-tags
 on:
   push:
     tags:
       - 'v*'
 jobs:
-  create-release:
-    name: Create release
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,7 +19,7 @@ jobs:
         id: commit-message
       - name: Check if prerelease
         run: |
-          TAG=$(git describe --abbrev=0)
+          TAG=$(git describe --abbrev=0 --tags)
           echo "$TAG"
           [[ "$TAG" == *-* ]] && PRERELEASE="true" || PRERELEASE="false"
           echo "$PRERELEASE"
