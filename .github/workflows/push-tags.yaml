@@ -5,6 +5,7 @@ on:
       - 'v*'
 jobs:
   release:
+    name: Publish release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

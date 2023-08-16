@@ -15,3 +15,6 @@ variable "TF_API_TOKEN" {
 variable "ACTIONS_GITHUB_TOKEN" {
   sensitive = true
 }
+variable "NPM_TOKEN" {
+  sensitive = true
+}
