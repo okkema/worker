@@ -5,3 +5,4 @@ tmp
 *.tgz
 .terraform
 coverage
+example/package-lock.json
