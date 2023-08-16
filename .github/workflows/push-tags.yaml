@@ -1,8 +1,7 @@
 name: push-tags
 on:
   push:
-    tags:
-      - 'v*'
+    tags: [v*]
 jobs:
   release:
     name: Create release

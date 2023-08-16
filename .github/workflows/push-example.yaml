@@ -1,8 +1,7 @@
 name: push-example
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     paths:
       - .github/workflows/push-example.yaml
       - .nvmrc

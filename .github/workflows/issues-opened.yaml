@@ -1,8 +1,7 @@
-name: issues
+name: issues-opened
 on:
   issues:
-    types:
-      - opened
+    types: [opened]
 jobs:
   project:
     name: Add issue to project
