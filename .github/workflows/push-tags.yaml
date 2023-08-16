@@ -35,5 +35,5 @@ jobs:
           release_name: ${{ github.ref }}
           body: |
             ${{ steps.commit-message.outputs.body }}
-          draft: false
+          draft: true
           prerelease: ${{ steps.version.outputs.prerelease == 'true' && true || false }}

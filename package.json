@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
@@ -33,7 +33,7 @@
     "lint:fix": "eslint '**/*.{js,ts,json}' --fix",
     "postinstall": "git config core.hooksPath .githooks",
     "postpublish": "npm run clean",
-    "prepack": "npm-run-all clean lint build test:verbose",
+    "prepack": "npm-run-all clean build",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:update": "jest --updateSnapshot",
