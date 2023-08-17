@@ -26,8 +26,8 @@ Functions for working with [JSON Web Keys](https://datatracker.ietf.org/doc/html
 
 Miscellaneous functions for:
 
-- URL safe Base64 encoding and decoding
-- Sanitizing objects
+- Sanitizing objects by removing unknown values and optionally nulls
+- Converting between buffers and strings, with optional Base64 encoding
 
 
 ## Usage

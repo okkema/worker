@@ -77,6 +77,7 @@
   "dependencies": {
     "@cloudflare/workers-types": "^4.20230807.0",
     "npm-run-all": "^4.1.5",
+    "rfc4648": "^1.5.2",
     "typescript": "^5.1.6"
   }
 }

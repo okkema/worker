@@ -1,7 +1,8 @@
 /* eslint-disable indent */
-import { urlSafeDecodeBase64 } from "../utils"
 import { Problem } from "../core"
 import { JWK } from "./jwk"
+import { base64url } from "rfc4648"
+import { RSA } from "../crypto"
 
 export type JsonWebToken = {
   header: {
@@ -15,7 +16,7 @@ export type JsonWebToken = {
     aud: string[]
     exp: number
   }
-  signature: string
+  signature: Uint8Array
 }
 
 export type DecodedJsonWebToken = {
@@ -25,19 +26,6 @@ export type DecodedJsonWebToken = {
     payload: string
     signature: string
   }
-}
-
-function verifySignature(jwt: DecodedJsonWebToken, key: CryptoKey) {
-  const {
-    decoded: { signature },
-    raw: { header, payload },
-  } = jwt
-  return crypto.subtle.verify(
-    "RSASSA-PKCS1-v1_5",
-    key,
-    new Uint8Array(Array.from(signature).map((x) => x.charCodeAt(0))),
-    new TextEncoder().encode(`${header}.${payload}`),
-  )
 }
 
 async function validateSignature(jwt: DecodedJsonWebToken): Promise<void> {
@@ -55,12 +43,18 @@ async function validateSignature(jwt: DecodedJsonWebToken): Promise<void> {
       title: "JWT Signature Validation Error",
       detail: `No matching JWK found: ${kid}`,
     })
-  const valid = await verifySignature(jwt, key.key)
-  if (!valid)
+  try {
+    await RSA.verify(
+      key.key,
+      jwt.decoded.signature,
+      `${jwt.decoded.header}.${jwt.decoded.payload}`,
+    )
+  } catch {
     throw new Problem({
       title: "JWT Signature Validation Error",
       detail: "Invalid JWT signature",
     })
+  }
 }
 
 function validateExpiration(jwt: DecodedJsonWebToken) {
@@ -130,39 +124,20 @@ function validateHeader(jwt: DecodedJsonWebToken) {
     })
 }
 
-function decodeSignature(signature: string): string {
-  switch (signature.length % 4) {
-    case 0:
-      break
-    case 2:
-      signature + "=="
-      break
-    case 3:
-      signature + "="
-      break
-    default:
-      throw new Problem({
-        title: "JWT Signature Decode Error",
-        detail: "Invalid JWT signature",
-      })
-  }
-  signature = atob(signature.replace(/_/g, "/").replace(/-/g, "+"))
-  try {
-    return urlSafeDecodeBase64(signature)
-  } catch {
-    return signature
-  }
-}
-
 export const JWT = {
   decode(token: string): DecodedJsonWebToken {
+    const decoder = new TextDecoder()
     try {
       const [header, payload, signature] = token.split(".")
       return {
         decoded: {
-          header: JSON.parse(urlSafeDecodeBase64(header)),
-          payload: JSON.parse(urlSafeDecodeBase64(payload)),
-          signature: decodeSignature(signature),
+          header: JSON.parse(
+            decoder.decode(base64url.parse(header, { loose: true })),
+          ),
+          payload: JSON.parse(
+            decoder.decode(base64url.parse(payload, { loose: true })),
+          ),
+          signature: base64url.parse(signature, { loose: true }),
         },
         raw: {
           header,
