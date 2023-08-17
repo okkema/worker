@@ -29,11 +29,7 @@ export type DecodedJsonWebToken = {
 }
 
 async function validateSignature({
-  decoded: {
-    header,
-    payload,
-    signature
-  },
+  decoded: { header, payload, signature },
 }: DecodedJsonWebToken): Promise<void> {
   const jwks = await JWK.fetch(payload.iss)
   const keys = await Promise.all(jwks.keys.map(JWK.import))
@@ -44,11 +40,7 @@ async function validateSignature({
       detail: `No matching JWK found: ${header.kid}`,
     })
   try {
-    await RSA.verify(
-      key.key,
-      signature,
-      `${header}.${payload}`,
-    )
+    await RSA.verify(key.key, signature, `${header}.${payload}`)
   } catch {
     throw new Problem({
       title: "JWT Signature Validation Error",
