@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "1.4.1-0",
+  "version": "1.5.0",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
@@ -11,6 +11,9 @@
     "*": {
       "auth": [
         "./dist/auth/index.d.ts"
+      ],
+      "crypto": [
+        "./dist/crypto/index.d.ts"
       ],
       "utils": [
         "./dist/utils/index.d.ts"
@@ -23,6 +26,7 @@
   "exports": {
     ".": "./dist/core/index.js",
     "./auth": "./dist/auth/index.js",
+    "./crypto": "./dist/crypto/index.js",
     "./utils": "./dist/utils/index.js",
     "./sentry": "./dist/sentry/index.js"
   },

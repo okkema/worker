@@ -18,6 +18,10 @@ The `core` module is exported at the root of the package. All other modules are 
 
 Functions for working with [JSON Web Keys](https://datatracker.ietf.org/doc/html/rfc7517) and [JSON Web Tokens](https://datatracker.ietf.org/doc/html/rfc7519).
 
+### [`crypto`](./src/crypto/)
+
+Functions for working with [RSA PKCS](https://datatracker.ietf.org/doc/html/rfc3447) keys.
+
 ### [`sentry`](./src/sentry)
 
 `Logger` implementation for reporting errors to [Sentry](https://docs.sentry.io/).
@@ -27,7 +31,6 @@ Functions for working with [JSON Web Keys](https://datatracker.ietf.org/doc/html
 Miscellaneous functions for:
 
 - Sanitizing objects by removing unknown values and optionally nulls
-- Converting between buffers and strings, with optional Base64 encoding
 
 
 ## Usage

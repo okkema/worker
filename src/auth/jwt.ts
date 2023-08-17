@@ -28,26 +28,26 @@ export type DecodedJsonWebToken = {
   }
 }
 
-async function validateSignature(jwt: DecodedJsonWebToken): Promise<void> {
-  const {
-    decoded: {
-      header: { kid },
-      payload: { iss },
-    },
-  } = jwt
-  const jwks = await JWK.fetch(iss)
+async function validateSignature({
+  decoded: {
+    header,
+    payload,
+    signature
+  },
+}: DecodedJsonWebToken): Promise<void> {
+  const jwks = await JWK.fetch(payload.iss)
   const keys = await Promise.all(jwks.keys.map(JWK.import))
-  const key = keys.find((x) => x.kid === kid)
+  const key = keys.find((x) => x.kid === header.kid)
   if (!key)
     throw new Problem({
       title: "JWT Signature Validation Error",
-      detail: `No matching JWK found: ${kid}`,
+      detail: `No matching JWK found: ${header.kid}`,
     })
   try {
     await RSA.verify(
       key.key,
-      jwt.decoded.signature,
-      `${jwt.decoded.header}.${jwt.decoded.payload}`,
+      signature,
+      `${header}.${payload}`,
     )
   } catch {
     throw new Problem({
@@ -57,12 +57,7 @@ async function validateSignature(jwt: DecodedJsonWebToken): Promise<void> {
   }
 }
 
-function validateExpiration(jwt: DecodedJsonWebToken) {
-  const {
-    decoded: {
-      payload: { exp },
-    },
-  } = jwt
+function validateExpiration(exp: number): void {
   const expiration = new Date(0)
   if (!exp)
     throw new Problem({
@@ -79,15 +74,14 @@ function validateExpiration(jwt: DecodedJsonWebToken) {
 }
 
 function validatePayload(
-  jwt: DecodedJsonWebToken,
+  {
+    decoded: {
+      payload: { aud, iss, exp },
+    },
+  }: DecodedJsonWebToken,
   audience: string,
   issuer: string,
 ) {
-  const {
-    decoded: {
-      payload: { aud, iss },
-    },
-  } = jwt
   if (!aud.includes(audience))
     throw new Problem({
       title: "JWT Payload Validation Error",
@@ -98,7 +92,7 @@ function validatePayload(
       title: "JWT Payload Validation Error",
       detail: `Invalid JWT issuer: ${iss}`,
     })
-  validateExpiration(jwt)
+  validateExpiration(exp)
 }
 
 function validateHeader(jwt: DecodedJsonWebToken) {

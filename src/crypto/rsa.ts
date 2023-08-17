@@ -14,7 +14,7 @@ export const RSA = {
       if (typeof key !== "string")
         throw new Problem({
           title: "RSA Error",
-          detail: "PEM key not in string format.",
+          detail: "PEM key not in string format",
         })
       const header = "-----BEGIN RSA PRIVATE KEY-----"
       const footer = "-----END RSA PRIVATE KEY-----"
