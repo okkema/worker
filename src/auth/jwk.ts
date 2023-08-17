@@ -1,4 +1,5 @@
 import { Problem } from "../core"
+import { RSA } from "../crypto"
 
 export type JsonWebKey = {
   alg: string
@@ -15,13 +16,7 @@ export const JWK = {
   async import(jwk: JsonWebKey): Promise<{ kid: string; key: CryptoKey }> {
     return {
       kid: jwk.kid,
-      key: await crypto.subtle.importKey(
-        "jwk",
-        jwk,
-        { name: "RSASSA-PKCS1-v1_5", hash: "SHA-256" },
-        false,
-        ["verify"],
-      ),
+      key: await RSA.import(jwk, "jwk", "verify"),
     }
   },
   async fetch(issuer: string): Promise<{ keys: JsonWebKey[] }> {

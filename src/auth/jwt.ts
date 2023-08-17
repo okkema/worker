@@ -1,7 +1,8 @@
 /* eslint-disable indent */
-import { urlSafeDecodeBase64 } from "../utils"
 import { Problem } from "../core"
 import { JWK } from "./jwk"
+import { base64url } from "rfc4648"
+import { RSA } from "../crypto"
 
 export type JsonWebToken = {
   header: {
@@ -15,7 +16,7 @@ export type JsonWebToken = {
     aud: string[]
     exp: number
   }
-  signature: string
+  signature: Uint8Array
 }
 
 export type DecodedJsonWebToken = {
@@ -27,48 +28,36 @@ export type DecodedJsonWebToken = {
   }
 }
 
-function verifySignature(jwt: DecodedJsonWebToken, key: CryptoKey) {
-  const {
-    decoded: { signature },
-    raw: { header, payload },
-  } = jwt
-  return crypto.subtle.verify(
-    "RSASSA-PKCS1-v1_5",
-    key,
-    new Uint8Array(Array.from(signature).map((x) => x.charCodeAt(0))),
-    new TextEncoder().encode(`${header}.${payload}`),
-  )
-}
-
-async function validateSignature(jwt: DecodedJsonWebToken): Promise<void> {
-  const {
-    decoded: {
-      header: { kid },
-      payload: { iss },
-    },
-  } = jwt
-  const jwks = await JWK.fetch(iss)
+async function validateSignature({
+  decoded: {
+    header,
+    payload,
+    signature
+  },
+}: DecodedJsonWebToken): Promise<void> {
+  const jwks = await JWK.fetch(payload.iss)
   const keys = await Promise.all(jwks.keys.map(JWK.import))
-  const key = keys.find((x) => x.kid === kid)
+  const key = keys.find((x) => x.kid === header.kid)
   if (!key)
     throw new Problem({
       title: "JWT Signature Validation Error",
-      detail: `No matching JWK found: ${kid}`,
+      detail: `No matching JWK found: ${header.kid}`,
     })
-  const valid = await verifySignature(jwt, key.key)
-  if (!valid)
+  try {
+    await RSA.verify(
+      key.key,
+      signature,
+      `${header}.${payload}`,
+    )
+  } catch {
     throw new Problem({
       title: "JWT Signature Validation Error",
       detail: "Invalid JWT signature",
     })
+  }
 }
 
-function validateExpiration(jwt: DecodedJsonWebToken) {
-  const {
-    decoded: {
-      payload: { exp },
-    },
-  } = jwt
+function validateExpiration(exp: number): void {
   const expiration = new Date(0)
   if (!exp)
     throw new Problem({
@@ -85,15 +74,14 @@ function validateExpiration(jwt: DecodedJsonWebToken) {
 }
 
 function validatePayload(
-  jwt: DecodedJsonWebToken,
+  {
+    decoded: {
+      payload: { aud, iss, exp },
+    },
+  }: DecodedJsonWebToken,
   audience: string,
   issuer: string,
 ) {
-  const {
-    decoded: {
-      payload: { aud, iss },
-    },
-  } = jwt
   if (!aud.includes(audience))
     throw new Problem({
       title: "JWT Payload Validation Error",
@@ -104,7 +92,7 @@ function validatePayload(
       title: "JWT Payload Validation Error",
       detail: `Invalid JWT issuer: ${iss}`,
     })
-  validateExpiration(jwt)
+  validateExpiration(exp)
 }
 
 function validateHeader(jwt: DecodedJsonWebToken) {
@@ -130,39 +118,20 @@ function validateHeader(jwt: DecodedJsonWebToken) {
     })
 }
 
-function decodeSignature(signature: string): string {
-  switch (signature.length % 4) {
-    case 0:
-      break
-    case 2:
-      signature + "=="
-      break
-    case 3:
-      signature + "="
-      break
-    default:
-      throw new Problem({
-        title: "JWT Signature Decode Error",
-        detail: "Invalid JWT signature",
-      })
-  }
-  signature = atob(signature.replace(/_/g, "/").replace(/-/g, "+"))
-  try {
-    return urlSafeDecodeBase64(signature)
-  } catch {
-    return signature
-  }
-}
-
 export const JWT = {
   decode(token: string): DecodedJsonWebToken {
+    const decoder = new TextDecoder()
     try {
       const [header, payload, signature] = token.split(".")
       return {
         decoded: {
-          header: JSON.parse(urlSafeDecodeBase64(header)),
-          payload: JSON.parse(urlSafeDecodeBase64(payload)),
-          signature: decodeSignature(signature),
+          header: JSON.parse(
+            decoder.decode(base64url.parse(header, { loose: true })),
+          ),
+          payload: JSON.parse(
+            decoder.decode(base64url.parse(payload, { loose: true })),
+          ),
+          signature: base64url.parse(signature, { loose: true }),
         },
         raw: {
           header,
