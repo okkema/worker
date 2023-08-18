@@ -9,10 +9,11 @@ describe("Worker", () => {
       const worker = Worker({ fetch })
       const request = new Request("/")
       const environment = {}
+      const context = jest.fn()
       // Act
-      await worker.fetch?.(request, environment)
+      await worker.fetch?.(request, environment, context)
       // Assert
-      expect(fetch).toHaveBeenCalledWith(request, environment)
+      expect(fetch).toHaveBeenCalledWith(request, environment, context)
     })
     it("responds to a request", async () => {
       // Arrange
@@ -21,10 +22,11 @@ describe("Worker", () => {
       const worker = Worker({ fetch })
       const request = new Request("/")
       const environment = {}
+      const context = jest.fn()
       // Act
-      const result = await worker.fetch?.(request, environment)
+      const result = await worker.fetch?.(request, environment, context)
       // Assert
-      expect(fetch).toHaveBeenCalledWith(request, environment)
+      expect(fetch).toHaveBeenCalledWith(request, environment, context)
       expect(result).toBe(response)
     })
     describe("on error", () => {
@@ -43,7 +45,7 @@ describe("Worker", () => {
         // Act
         await worker.fetch?.(request, environment, context)
         // Assert
-        expect(fetch).toHaveBeenCalledWith(request, environment)
+        expect(fetch).toHaveBeenCalledWith(request, environment, context)
         expect(error).toBeCalledWith(request, err, environment)
         expect(waitUntil).toHaveBeenCalled()
       })
@@ -66,7 +68,7 @@ describe("Worker", () => {
         // Act
         const result = await worker.fetch?.(request, environment, context)
         // Assert
-        expect(fetch).toHaveBeenCalledWith(request, environment)
+        expect(fetch).toHaveBeenCalledWith(request, environment, context)
         expect(result?.status).toBe(init.status)
         expect(result?.statusText).toBe("Problem Details")
         const json = await result?.json()
@@ -86,7 +88,7 @@ describe("Worker", () => {
         // Act
         const result = await worker.fetch?.(request, environment, context)
         // Assert
-        expect(fetch).toHaveBeenCalledWith(request, environment)
+        expect(fetch).toHaveBeenCalledWith(request, environment, context)
         expect(result?.status).toBe(500)
         const text = await result?.text()
         expect(text).toBe(message)
@@ -100,10 +102,11 @@ describe("Worker", () => {
       const worker = Worker({ scheduled })
       const event = jest.fn()
       const environment = {}
+      const context = jest.fn()
       // Act
-      await worker.scheduled?.(event, environment)
+      await worker.scheduled?.(event, environment, context)
       // Assert
-      expect(scheduled).toHaveBeenCalledWith(event, environment)
+      expect(scheduled).toHaveBeenCalledWith(event, environment, context)
     })
     describe("on error", () => {
       it("catches and forwards the error", async () => {
@@ -125,7 +128,7 @@ describe("Worker", () => {
         } catch (error) {
           // Assert
           expect(error).toBe(err)
-          expect(scheduled).toHaveBeenCalledWith(event, environment)
+          expect(scheduled).toHaveBeenCalledWith(event, environment, context)
         }
       })
       it("calls the logger if present", async () => {
@@ -148,7 +151,7 @@ describe("Worker", () => {
         } catch (caught) {
           // Assert
           expect(caught).toBe(err)
-          expect(scheduled).toHaveBeenCalledWith(event, environment)
+          expect(scheduled).toHaveBeenCalledWith(event, environment, context)
           expect(error).toHaveBeenCalledWith(event, err, environment)
           expect(waitUntil).toBeCalled()
         }
