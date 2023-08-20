@@ -9,10 +9,10 @@ type SentryLoggerInit = {
   environment?: string
 }
 
-export function SentryLogger({
+export function SentryLogger<Environment>({
   DSN,
   environment = "production",
-}: SentryLoggerInit): Logger {
+}: SentryLoggerInit): Logger<Environment> {
   const { origin, pathname, username } = new URL(DSN)
   const url = `${origin}/api${pathname}/store/?sentry_key=${username}&sentry_version=7&sentry_client=${PACKAGE_VERSION}`
 
