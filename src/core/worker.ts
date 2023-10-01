@@ -27,14 +27,27 @@ export type ScheduledEventHandler<Environment> = (
 ) => void | Promise<void>
 
 /**
+ * @typedef {Function} EmailEventHandler
+ * @param {ForwardableEmailMessage} message - Email message
+ * @param {Environment} environment - Cloudflare Worker environment
+ * @param {ExecutionContext} context - Cloudflare Worker execution context
+ * @returns {(void|Promise<void>)}
+ */
+export type EmailEventHandler<Environment> = (
+  message: ForwardableEmailMessage,
+  environment: Environment,
+  context: ExecutionContext,
+) => void | Promise<void>
+
+/**
  * @typedef {Function} ErrorHandler
- * @param {(Request|ScheduledEvent)} event - HTTP request or scheduled event depending on handler
+ * @param {(Request|ScheduledEvent|ForwardableEmailMessage)} event - HTTP request, scheduled event or email message depending on handler
  * @param {Error} error - Javascript error
  * @param {Environment} [environment] - Cloudflare Worker environment
  * @returns {Promise<boolean>} - Indicates whether the error was handled
  */
 export type ErrorHandler<Environment> = (
-  event: Request | ScheduledEvent,
+  event: Request | ScheduledEvent | ForwardableEmailMessage,
   error: Error,
   environment?: Environment,
 ) => Promise<boolean>
@@ -51,11 +64,13 @@ export type Logger<Environment> = {
  * @typedef {object} WorkerInit
  * @property {FetchEventHandler} [fetch] - Fetch event handler
  * @property {ScheduledEventHandler} [scheduled] - Scheduled event handler
+ * @property {EmailEventHandler} [email] - Email event handler
  * @property {Logger} [logger]
  */
 type WorkerInit<Environment> = {
   fetch?: FetchEventHandler<Environment>
   scheduled?: ScheduledEventHandler<Environment>
+  email?: EmailEventHandler<Environment>
   logger?: Logger<Environment>
 }
 
@@ -63,10 +78,12 @@ type WorkerInit<Environment> = {
  * @typedef {object} Worker
  * @property {FetchEventHandler} [fetch] - Fetch event handler
  * @property {ScheduledEventHandler} [scheduled] - Scheduled event handler
+ * @property {EmailEventHandler} [email] - Email event handler
  */
 type Worker<Environment> = {
   fetch?: FetchEventHandler<Environment>
   scheduled?: ScheduledEventHandler<Environment>
+  email?: EmailEventHandler<Environment>
 }
 
 export function Worker<Environment = object>(
@@ -92,6 +109,14 @@ export function Worker<Environment = object>(
         if (init.logger)
           context.waitUntil(init.logger.error(event, error, environment))
         throw error
+      }
+    },
+    async email(message, environment, context) {
+      try {
+        await init.email(message, environment, context)
+      } catch (error) {
+        if (init.logger)
+          context.waitUntil(init.logger.error(message, error, environment))
       }
     },
   }
