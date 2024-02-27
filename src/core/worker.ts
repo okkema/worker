@@ -1,3 +1,8 @@
+import type {
+  ExecutionContext,
+  ForwardableEmailMessage,
+  ScheduledEvent,
+} from "@cloudflare/workers-types"
 import { Problem } from "./problem"
 
 /**
