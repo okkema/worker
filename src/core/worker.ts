@@ -70,13 +70,16 @@ export type Logger<Environment> = {
  * @property {FetchEventHandler} [fetch] - Fetch event handler
  * @property {ScheduledEventHandler} [scheduled] - Scheduled event handler
  * @property {EmailEventHandler} [email] - Email event handler
- * @property {Logger} [logger]
+ * @property {Function} [logger]
  */
 type WorkerInit<Environment> = {
   fetch?: FetchEventHandler<Environment>
   scheduled?: ScheduledEventHandler<Environment>
   email?: EmailEventHandler<Environment>
-  logger?: Logger<Environment>
+  logger?: (
+    environment: Environment,
+    context: ExecutionContext,
+  ) => Logger<Environment>
 }
 
 /**
@@ -101,7 +104,11 @@ export function Worker<Environment = object>(
         response = await init.fetch(request, environment, context)
       } catch (error) {
         if (init.logger)
-          context.waitUntil(init.logger.error(request, error, environment))
+          context.waitUntil(
+            init
+              .logger(environment, context)
+              .error(request, error, environment),
+          )
         if (error instanceof Problem) response = error.response
         else response = new Response(error.message, { status: 500 })
       }
@@ -112,7 +119,9 @@ export function Worker<Environment = object>(
         await init.scheduled(event, environment, context)
       } catch (error) {
         if (init.logger)
-          context.waitUntil(init.logger.error(event, error, environment))
+          context.waitUntil(
+            init.logger(environment, context).error(event, error, environment),
+          )
         throw error
       }
     },
@@ -121,7 +130,11 @@ export function Worker<Environment = object>(
         await init.email(message, environment, context)
       } catch (error) {
         if (init.logger)
-          context.waitUntil(init.logger.error(message, error, environment))
+          context.waitUntil(
+            init
+              .logger(environment, context)
+              .error(message, error, environment),
+          )
       }
     },
   }

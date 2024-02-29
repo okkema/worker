@@ -37,7 +37,8 @@ describe("Worker", () => {
           throw err
         })
         const error = jest.fn()
-        const worker = Worker({ fetch, logger: { error } })
+        const logger = { error }
+        const worker = Worker({ fetch, logger: () => logger })
         const request = new Request("/")
         const waitUntil = jest.fn()
         const environment = {}
@@ -138,7 +139,8 @@ describe("Worker", () => {
           throw err
         })
         const error = jest.fn()
-        const worker = Worker({ scheduled, logger: { error } })
+        const logger = { error }
+        const worker = Worker({ scheduled, logger: () => logger })
         const event = jest.fn()
         const environment = {}
         const waitUntil = jest.fn()
