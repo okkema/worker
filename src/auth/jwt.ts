@@ -13,8 +13,9 @@ export type JsonWebToken = {
   payload: {
     iss: string
     sub: string
-    aud: string[]
+    aud: string[] | string
     exp: number
+    scope?: string
   }
   signature: Uint8Array
 }
@@ -74,11 +75,20 @@ function validatePayload(
   audience: string,
   issuer: string,
 ) {
-  if (!aud.includes(audience))
-    throw new Problem({
-      title: "JWT Payload Validation Error",
-      detail: `Invalid JWT audience: ${aud.join(",")}`,
-    })
+  if (Array.isArray(aud)) {
+    if (!aud.includes(audience))
+      throw new Problem({
+        title: "JWT Payload Validation Error",
+        detail: `Invalid JWT audience: ${aud.join(",")}`,
+      })
+  } else {
+    if (aud !== audience) {
+      throw new Problem({
+        title: "JWT Payload Validation Error",
+        detail: `Invalid JWT audience: ${aud}`,
+      })
+    }
+  }
   if (iss !== issuer)
     throw new Problem({
       title: "JWT Payload Validation Error",

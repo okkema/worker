@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
@@ -17,9 +17,6 @@
       ],
       "utils": [
         "./dist/utils/index.d.ts"
-      ],
-      "sentry": [
-        "./dist/sentry/index.d.ts"
       ]
     }
   },
@@ -27,8 +24,7 @@
     ".": "./dist/core/index.js",
     "./auth": "./dist/auth/index.js",
     "./crypto": "./dist/crypto/index.js",
-    "./utils": "./dist/utils/index.js",
-    "./sentry": "./dist/sentry/index.js"
+    "./utils": "./dist/utils/index.js"
   },
   "scripts": {
     "build": "tsc",
