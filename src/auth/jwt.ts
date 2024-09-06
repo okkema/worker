@@ -97,6 +97,8 @@ function validatePayload(
       })
     }
   }
+  if (!issuer.startsWith("https://")) issuer = `https://${issuer}`
+  if (!issuer.endsWith("/")) issuer = `${issuer}/`
   if (iss !== issuer)
     throw new Problem({
       title: "JWT Payload Validation Error",
