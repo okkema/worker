@@ -1,5 +1,6 @@
 import { base64 } from "rfc4648"
 import { Problem } from "../core"
+import type { JsonWebKey } from "@cloudflare/workers-types"
 
 export const RSA = {
   ALGORITHM: "RSASSA-PKCS1-v1_5",

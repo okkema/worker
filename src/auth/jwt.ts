@@ -39,6 +39,7 @@ async function validateSignature({
     throw new Problem({
       title: "JWT Signature Validation Error",
       detail: `No matching JWK found: ${header.kid}`,
+      status: 401,
     })
   try {
     await RSA.verify(key.key, signature, `${header}.${payload}`)
@@ -46,6 +47,7 @@ async function validateSignature({
     throw new Problem({
       title: "JWT Signature Validation Error",
       detail: "Invalid JWT signature",
+      status: 401,
     })
   }
 }
@@ -56,6 +58,7 @@ function validateExpiration(exp: number): void {
     throw new Problem({
       title: "JWT Expiration Validation Error",
       detail: "Missing JWT expiration",
+      status: 401,
     })
   expiration.setUTCSeconds(exp)
   const now = new Date(Date.now())
@@ -63,6 +66,7 @@ function validateExpiration(exp: number): void {
     throw new Problem({
       title: "JWT Expiration Validation Error",
       detail: "JWT is expired",
+      status: 401,
     })
 }
 
@@ -75,17 +79,21 @@ function validatePayload(
   audience: string,
   issuer: string,
 ) {
+  if (!audience.startsWith("https://")) audience = `https://${audience}`
+  if (!audience.endsWith("/")) audience = `${audience}/`
   if (Array.isArray(aud)) {
     if (!aud.includes(audience))
       throw new Problem({
         title: "JWT Payload Validation Error",
         detail: `Invalid JWT audience: ${aud.join(",")}`,
+        status: 401,
       })
   } else {
     if (aud !== audience) {
       throw new Problem({
         title: "JWT Payload Validation Error",
         detail: `Invalid JWT audience: ${aud}`,
+        status: 401,
       })
     }
   }
@@ -93,6 +101,7 @@ function validatePayload(
     throw new Problem({
       title: "JWT Payload Validation Error",
       detail: `Invalid JWT issuer: ${iss}`,
+      status: 401,
     })
   validateExpiration(exp)
 }
@@ -107,16 +116,19 @@ function validateHeader(jwt: DecodedJsonWebToken) {
     throw new Problem({
       title: "JWT Header Validation Error",
       detail: `Invalid JWT type: ${typ}`,
+      status: 401,
     })
   if (alg !== "RS256")
     throw new Problem({
       title: "JWT Header Validation Error",
       detail: `Invalid JWT algorithm: ${alg}`,
+      status: 401,
     })
   if (!kid)
     throw new Problem({
       title: "JWT Header Validation Error",
       detail: "Missing JWT key id",
+      status: 401,
     })
 }
 
@@ -145,6 +157,7 @@ export const JWT = {
       throw new Problem({
         title: "JWT Decode Error",
         detail: `Unable to decode JWT: ${error}`,
+        status: 401,
       })
     }
   },

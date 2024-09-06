@@ -17,12 +17,12 @@ const createJWT = () => ({
       typ: "JWT",
     },
     payload: {
-      aud: ["audience"],
+      aud: ["https://audience/"],
       exp: Date.now() / 1000 + 1000,
       iss: "issuer",
       sub: "subject",
     },
-    signature: "",
+    signature: new Uint8Array(),
   },
   raw: {
     header: "",

@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
@@ -15,6 +15,9 @@
       "crypto": [
         "./dist/crypto/index.d.ts"
       ],
+      "middleware": [
+        "./dist/middleware/index.d.ts"
+      ],
       "utils": [
         "./dist/utils/index.d.ts"
       ]
@@ -24,6 +27,7 @@
     ".": "./dist/core/index.js",
     "./auth": "./dist/auth/index.js",
     "./crypto": "./dist/crypto/index.js",
+    "./middleware": "./dist/middleware/index.js",
     "./utils": "./dist/utils/index.js"
   },
   "scripts": {
@@ -76,6 +80,8 @@
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20240222.0",
+    "chanfana": "^2.0.4",
+    "hono": "^4.5.11",
     "npm-run-all": "^4.1.5",
     "rfc4648": "^1.5.2",
     "typescript": "^5.1.6"
