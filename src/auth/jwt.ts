@@ -80,7 +80,7 @@ function validatePayload(
   issuer: string,
 ) {
   if (!audience.startsWith("https://")) audience = `https://${audience}`
-  if (!audience.endsWith("/")) audience = `${audience}/`
+  if (audience.endsWith("/")) audience = audience.slice(0, -1)
   if (Array.isArray(aud)) {
     if (!aud.includes(audience))
       throw new Problem({
