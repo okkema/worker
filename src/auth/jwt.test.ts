@@ -17,9 +17,9 @@ const createJWT = () => ({
       typ: "JWT",
     },
     payload: {
-      aud: ["https://audience/"],
+      aud: ["https://audience"],
       exp: Date.now() / 1000 + 1000,
-      iss: "issuer",
+      iss: "https://issuer/",
       sub: "subject",
     },
     signature: new Uint8Array(),
