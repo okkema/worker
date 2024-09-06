@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
@@ -79,7 +79,7 @@
     "service-worker-mock": "^2.0.5"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20240222.0",
+    "@cloudflare/workers-types": "^4.20240903.0",
     "@sentry/cloudflare": "^8.28.0",
     "chanfana": "^2.0.4",
     "hono": "^4.5.11",
