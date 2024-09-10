@@ -1,12 +1,7 @@
 variable "github_repository" {}
 variable "cloudflare_account_id" {}
 variable "cloudflare_zone_id" {}
-variable "cloudflare_r2_access_key" {
-  sensitive = true
-}
-variable "cloudflare_r2_secret_key" {
-  sensitive = true
-}
+variable "sentry_default_user" {}
 
 # GitHub Actions Secrets
 variable "TF_API_TOKEN" {

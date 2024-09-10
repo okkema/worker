@@ -1,11 +1,15 @@
-import { Problem, Worker } from "@okkema/worker"
-import { Response } from "@cloudflare/workers-types"
+import { API, Problem, Worker } from "@okkema/worker"
 
 export default Worker({
-  async fetch(request) {
-    const url = new URL(request.url)
-    if (url.pathname === "/error")
+  async fetch(req, env, ctx) {
+    const api = API()
+    api.get("/error", function () {
       throw new Problem({ detail: "detail", title: "title" })
-    return new Response("success")
+    })
+    api.get("/health", function (c) {
+      return c.text("success")
+    })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return api.fetch(req as any, env, ctx) as any
   },
 })

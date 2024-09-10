@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "description": "Okkema Labs Worker Example",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prebuild": "cd .. && npm run build",
+    "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --format=esm"
   },
   "dependencies": {
     "@cloudflare/workers-types": "^4.20240903.0",
-    "@okkema/worker": "file:.."
+    "@okkema/worker": "file:..",
+    "wrangler": "^3.75.0"
   }
 }
