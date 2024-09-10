@@ -6,11 +6,11 @@ type WorkerEnvironment = {
 }
 
 export function Worker<Environment extends WorkerEnvironment>(
-  handler: unknown,
+  handler: ExportedHandler<Environment>,
 ) {
   return withSentry(function (env: Environment) {
     return {
       dsn: env.SENTRY_DSN,
     }
-  }, handler satisfies ExportedHandler<Environment>)
+  }, handler) as ExportedHandler<Environment>
 }
