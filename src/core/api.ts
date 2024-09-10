@@ -20,7 +20,7 @@ type APIVariables = AuthVariables
 export function API<
   Bindings extends APIBindings,
   Variables extends APIVariables,
->({ tokenUrl, options, scopes }: APIInit | undefined) {
+>({ tokenUrl, options, scopes }: APIInit) {
   const base = new Hono<{ Bindings: Bindings; Variables: Variables }>()
   const app = fromHono(base, options)
 
