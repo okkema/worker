@@ -23,7 +23,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version-file: .nvmrc
-      - name: Install dependencies
+      - name: Install package dependencies
+        run: npm ci
+      - name: Install example dependencies
         run: npm ci
         working-directory: example
       - name: Build Worker
