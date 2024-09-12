@@ -34,8 +34,7 @@ module "worker" {
 
 module "sentry" {
   source  = "app.terraform.io/okkema/project/sentry"
-  version = "~> 0.3"
+  version = "~> 0.4"
 
   github_repository = var.github_repository
-  default_user      = var.sentry_default_user
 }
