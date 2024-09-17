@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "3.3.2",
+  "version": "3.3.3",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
@@ -10,34 +10,34 @@
   "types": "./dist/types/core/index.d.ts",
   "exports": {
     ".": {
-      "default": "./dist/esm/core/index.js",
+      "types": "./dist/types/core/index.d.ts",
       "import": "./dist/esm/core/index.js",
       "require": "./dist/cjs/core/index.js",
-      "types": "./dist/types/core/index.d.ts"
+      "default": "./dist/esm/core/index.js"
     },
     "./auth": {
-      "default": "./dist/esm/auth/index.js",
+      "types": "./dist/types/auth/index.d.ts",
       "import": "./dist/esm/auth/index.js",
       "require": "./dist/cjs/auth/index.js",
-      "types": "./dist/types/auth/index.d.ts"
+      "default": "./dist/esm/auth/index.js"
     },
     "./crypto": {
-      "default": "./dist/esm/crypto/index.js",
+      "types": "./dist/types/crypto/index.d.ts",
       "import": "./dist/esm/crypto/index.js",
       "require": "./dist/cjs/crypto/index.js",
-      "types": "./dist/types/crypto/index.d.ts"
+      "default": "./dist/esm/crypto/index.js"
     },
     "./middleware": {
-      "default": "./dist/esm/middleware/index.js",
+      "types": "./dist/types/middleware/index.d.ts",
       "import": "./dist/esm/middleware/index.js",
       "require": "./dist/cjs/middleware/index.js",
-      "types": "./dist/types/middleware/index.d.ts"
+      "default": "./dist/esm/middleware/index.js"
     },
     "./utils": {
-      "default": "./dist/esm/utils/index.js",
+      "types": "./dist/types/utils/index.d.ts",
       "import": "./dist/esm/utils/index.js",
       "require": "./dist/cjs/utils/index.js",
-      "types": "./dist/types/utils/index.d.ts"
+      "default": "./dist/esm/utils/index.js"
     }
   },
   "scripts": {
