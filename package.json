@@ -1,38 +1,48 @@
 {
   "name": "@okkema/worker",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
   ],
   "type": "module",
-  "module": "./dist/core/index.js",
-  "types": "./dist/core/index.d.ts",
-  "typesVersions": {
-    "*": {
-      "auth": [
-        "./dist/auth/index.d.ts"
-      ],
-      "crypto": [
-        "./dist/crypto/index.d.ts"
-      ],
-      "middleware": [
-        "./dist/middleware/index.d.ts"
-      ],
-      "utils": [
-        "./dist/utils/index.d.ts"
-      ]
+  "main": "./dist/cjs/core/index.js",
+  "module": "./dist/esm/core/index.js",
+  "types": "./dist/types/core/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/esm/core/index.js",
+      "import": "./dist/esm/core/index.js",
+      "require": "./dist/cjs/core/index.js",
+      "types": "./dist/types/core/index.d.ts"
+    },
+    "./auth": {
+      "default": "./dist/esm/auth/index.js",
+      "import": "./dist/esm/auth/index.js",
+      "require": "./dist/cjs/auth/index.js",
+      "types": "./dist/types/auth/index.d.ts"
+    },
+    "./crypto": {
+      "default": "./dist/esm/crypto/index.js",
+      "import": "./dist/esm/crypto/index.js",
+      "require": "./dist/cjs/crypto/index.js",
+      "types": "./dist/types/crypto/index.d.ts"
+    },
+    "./middleware": {
+      "default": "./dist/esm/middleware/index.js",
+      "import": "./dist/esm/middleware/index.js",
+      "require": "./dist/cjs/middleware/index.js",
+      "types": "./dist/types/middleware/index.d.ts"
+    },
+    "./utils": {
+      "default": "./dist/esm/utils/index.js",
+      "import": "./dist/esm/utils/index.js",
+      "require": "./dist/cjs/utils/index.js",
+      "types": "./dist/types/utils/index.d.ts"
     }
   },
-  "exports": {
-    ".": "./dist/core/index.js",
-    "./auth": "./dist/auth/index.js",
-    "./crypto": "./dist/crypto/index.js",
-    "./middleware": "./dist/middleware/index.js",
-    "./utils": "./dist/utils/index.js"
-  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b ./tsconfig.json ./tsconfig.cjs.json ./tsconfig.esm.json",
     "clean": "rm -rf ./dist",
     "lint": "eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint '**/*.{js,ts,json}' --fix",

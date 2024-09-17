@@ -1,13 +1,13 @@
 {
   "compilerOptions": {
-    "outDir": "dist",
+    "outDir": "dist/types",
     "lib": ["esnext"],
     "types": ["@cloudflare/workers-types"],
     "esModuleInterop": true,
     "declaration": true,
+    "emitDeclarationOnly": true,
     "moduleResolution": "node",
-    "module": "esnext",
-    "target": "esnext",
+    "target": "ESNext",
     "skipLibCheck": true
   },
   "include": ["src"],
