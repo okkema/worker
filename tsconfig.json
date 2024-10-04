@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "module": "Node16",
+    "module": "ESNext",
     "target": "ESNext",
     "declaration": true,
     "sourceMap": true,
     "declarationMap": true,
     "skipLibCheck": true,
+    "moduleResolution": "Bundler",
     "lib": ["esnext"],
     "types": ["@cloudflare/workers-types"]
   },
