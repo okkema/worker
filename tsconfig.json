@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "outDir": "dist",
-    "lib": ["esnext"],
-    "types": ["@cloudflare/workers-types"],
-    "esModuleInterop": true,
-    "declaration": true,
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "Node16",
     "target": "ESNext",
-    "skipLibCheck": true
+    "declaration": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "skipLibCheck": true,
+    "lib": ["esnext"],
+    "types": ["@cloudflare/workers-types"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.test.*"]
