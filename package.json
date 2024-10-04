@@ -1,47 +1,36 @@
 {
   "name": "@okkema/worker",
-  "version": "3.3.4",
+  "version": "3.3.5",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist"
   ],
-  "main": "./dist/cjs/core/index.js",
-  "module": "./dist/esm/core/index.js",
-  "types": "./dist/types/core/index.d.ts",
+  "main": "./dist/core/index.js",
+  "types": "./dist/core/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/types/core/index.d.ts",
-      "import": "./dist/esm/core/index.js",
-      "require": "./dist/cjs/core/index.js",
-      "default": "./dist/cjs/core/index.js"
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
     },
     "./auth": {
-      "types": "./dist/types/auth/index.d.ts",
-      "import": "./dist/esm/auth/index.js",
-      "require": "./dist/cjs/auth/index.js",
-      "default": "./dist/cjs/auth/index.js"
+      "types": "./dist/auth/index.d.ts",
+      "default": "./dist/auth/index.js"
     },
     "./crypto": {
-      "types": "./dist/types/crypto/index.d.ts",
-      "import": "./dist/esm/crypto/index.js",
-      "require": "./dist/cjs/crypto/index.js",
-      "default": "./dist/cjs/crypto/index.js"
+      "types": "./dist/crypto/index.d.ts",
+      "default": "./dist/crypto/index.js"
     },
     "./middleware": {
-      "types": "./dist/types/middleware/index.d.ts",
-      "import": "./dist/esm/middleware/index.js",
-      "require": "./dist/cjs/middleware/index.js",
-      "default": "./dist/cjs/middleware/index.js"
+      "types": "./dist/middleware/index.d.ts",
+      "default": "./dist/middleware/index.js"
     },
     "./utils": {
-      "types": "./dist/types/utils/index.d.ts",
-      "import": "./dist/esm/utils/index.js",
-      "require": "./dist/cjs/utils/index.js",
-      "default": "./dist/cjs/utils/index.js"
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
     }
   },
   "scripts": {
-    "build": "tsc -b ./tsconfig.json ./tsconfig.cjs.json ./tsconfig.esm.json",
+    "build": "tsc -b ./tsconfig.json",
     "clean": "rm -rf ./dist",
     "lint": "eslint '**/*.{js,ts,json}'",
     "lint:fix": "eslint '**/*.{js,ts,json}' --fix",

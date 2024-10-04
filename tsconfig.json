@@ -1,11 +1,11 @@
 {
   "compilerOptions": {
-    "outDir": "dist/types",
+    "outDir": "dist",
     "lib": ["esnext"],
     "types": ["@cloudflare/workers-types"],
     "esModuleInterop": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
+    "module": "CommonJS",
     "moduleResolution": "node",
     "target": "ESNext",
     "skipLibCheck": true
