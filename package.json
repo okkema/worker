@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "3.3.9",
+  "version": "3.3.10",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist",
@@ -25,9 +25,9 @@
       "types": "./dist/crypto/index.d.ts",
       "default": "./dist/crypto/index.js"
     },
-    "./middleware": {
-      "types": "./dist/middleware/index.d.ts",
-      "default": "./dist/middleware/index.js"
+    "./sentry": {
+      "types": "./dist/sentry/index.d.ts",
+      "default": "./dist/sentry/index.js"
     },
     "./utils": {
       "types": "./dist/utils/index.d.ts",

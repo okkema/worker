@@ -1,11 +1,11 @@
 import type { ExportedHandler } from "@cloudflare/workers-types"
 import { withSentry } from "@sentry/cloudflare"
 
-type WorkerEnvironment = {
+type SentryEnvironment = {
   SENTRY_DSN: string
 }
 
-export function Worker<Environment extends WorkerEnvironment>(
+export function SentryWorker<Environment extends SentryEnvironment>(
   handler: ExportedHandler<Environment>,
 ) {
   return withSentry(function (env: Environment) {

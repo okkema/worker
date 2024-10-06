@@ -1,4 +1,4 @@
-import { API, Problem, Worker } from "@okkema/worker"
+import { API, Problem, Worker } from "@okkema/worker/dist/"
 
 export default Worker({
   async fetch(req, env, ctx) {
