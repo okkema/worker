@@ -5,6 +5,7 @@
     "target": "ESNext",
     "declaration": true,
     "sourceMap": true,
+    "sourceRoot": "https://raw.githubusercontent.com/okkema/worker/refs/heads/main/src",
     "declarationMap": true,
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
