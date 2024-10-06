@@ -1,9 +1,10 @@
 {
   "name": "@okkema/worker",
-  "version": "3.3.8",
+  "version": "3.3.9",
   "description": "Cloudflare Workers Toolkit",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "main": "./dist/core/index.js",
   "types": "./dist/core/index.d.ts",
@@ -11,6 +12,10 @@
     ".": {
       "types": "./dist/core/index.d.ts",
       "default": "./dist/core/index.js"
+    },
+    "./api": {
+      "types": "./dist/api/index.d.ts",
+      "default": "./dist/api/index.js"
     },
     "./auth": {
       "types": "./dist/auth/index.d.ts",
