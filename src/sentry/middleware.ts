@@ -1,5 +1,5 @@
 import { Context, Next } from "hono"
-import { ErrorBindings, ErrorVariables } from "../api/middleware"
+import { ErrorBindings, ErrorVariables } from "../api"
 import { SentryLogger } from "./logger"
 
 export async function sentry(

@@ -1,6 +1,6 @@
 import type { Context, Next } from "hono"
-import { type JsonWebToken, JWT } from "../../auth"
-import { Problem } from "../../core"
+import { type JsonWebToken, JWT } from "../auth"
+import { Problem } from "../core"
 /**
  * Auth Middleware Bindings
  */

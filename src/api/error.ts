@@ -1,5 +1,5 @@
 import { Context } from "hono"
-import { type Logger, Problem } from "../../core"
+import { type Logger, Problem } from "../core"
 
 /**
  * Error Middleware Bindings

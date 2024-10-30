@@ -7,7 +7,7 @@ import {
   type AuthVariables,
   type ErrorBindings,
   type ErrorVariables,
-} from "./middleware"
+} from "./"
 import { type Logger } from "../core"
 
 type APIInit = {
