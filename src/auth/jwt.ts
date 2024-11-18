@@ -29,10 +29,18 @@ export type DecodedJsonWebToken = {
   }
 }
 
-async function validateSignature({
-  decoded: { header, payload, signature },
-}: DecodedJsonWebToken): Promise<void> {
-  const jwks = await JWK.fetch(payload.iss)
+export type ValidateOptions = {
+  jwkUrl?: string
+  skipAppendIssuer?: boolean
+  skipPrependAudience?: boolean
+}
+
+async function validateSignature(
+  { decoded: { header, payload, signature } }: DecodedJsonWebToken,
+  options?: ValidateOptions,
+): Promise<void> {
+  const url = options?.jwkUrl ?? JWK.url(payload.iss)
+  const jwks = await JWK.fetch(url)
   const keys = await Promise.all(jwks.keys.map(JWK.import))
   const key = keys.find((x) => x.kid === header.kid)
   if (!key)
@@ -78,8 +86,10 @@ function validatePayload(
   }: DecodedJsonWebToken,
   audience: string,
   issuer: string,
+  options?: ValidateOptions,
 ) {
-  if (!audience.startsWith("https://")) audience = `https://${audience}`
+  if (!audience.startsWith("https://") && !options?.skipPrependAudience)
+    audience = `https://${audience}`
   if (audience.endsWith("/")) audience = audience.slice(0, -1)
   if (Array.isArray(aud)) {
     if (!aud.includes(audience))
@@ -98,7 +108,7 @@ function validatePayload(
     }
   }
   if (!issuer.startsWith("https://")) issuer = `https://${issuer}`
-  if (!issuer.endsWith("/")) issuer = `${issuer}/`
+  if (!issuer.endsWith("/") && !options?.skipAppendIssuer) issuer = `${issuer}/`
   if (iss !== issuer)
     throw new Problem({
       title: "JWT Payload Validation Error",
@@ -193,9 +203,10 @@ export const JWT = {
     jwt: DecodedJsonWebToken,
     audience: string,
     issuer: string,
+    options?: ValidateOptions,
   ): Promise<void> {
     validateHeader(jwt)
-    validatePayload(jwt, audience, issuer)
-    await validateSignature(jwt)
+    validatePayload(jwt, audience, issuer, options)
+    await validateSignature(jwt, options)
   },
 }

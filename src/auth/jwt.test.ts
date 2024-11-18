@@ -6,6 +6,7 @@ jest.mock("./jwk", () => ({
   JWK: {
     fetch: jest.fn(),
     import: jest.fn(),
+    url: jest.fn(),
   },
 }))
 
@@ -137,6 +138,11 @@ describe("JWT", () => {
       it.todo("throws an error if the signature is invalid")
     })
     it.todo("validates the token")
+    describe("options", () => {
+      it.todo("calls the JWK URL")
+      it.todo("skips appending the issuer")
+      it.todo("skips prepending the audience")
+    })
   })
 
   describe("get", () => {

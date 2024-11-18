@@ -19,16 +19,19 @@ export const JWK = {
       key: await RSA.import(jwk, "jwk", "verify"),
     }
   },
-  async fetch(issuer: string): Promise<{ keys: JsonWebKey[] }> {
-    const url = new URL(issuer)
-    if (!url.pathname.endsWith("/")) url.pathname += "/"
-    url.pathname += ".well-known/jwks.json"
-    const resp = await fetch(url.href)
+  async fetch(url: string): Promise<{ keys: JsonWebKey[] }> {
+    const resp = await fetch(url)
     if (!resp.ok)
       throw new Problem({
         title: "JWK Error",
         detail: `Error fetching JWKS: ${resp.status}`,
       })
     return resp.json()
+  },
+  url(issuer): string {
+    const url = new URL(issuer)
+    if (!url.pathname.endsWith("/")) url.pathname += "/"
+    url.pathname += ".well-known/jwks.json"
+    return url.href
   },
 }
