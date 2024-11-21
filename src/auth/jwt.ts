@@ -33,6 +33,7 @@ export type ValidateOptions = {
   jwkUrl?: string
   skipAppendIssuer?: boolean
   skipPrependAudience?: boolean
+  ignoreHeaderType?: boolean
 }
 
 async function validateSignature(
@@ -118,13 +119,13 @@ function validatePayload(
   validateExpiration(exp)
 }
 
-function validateHeader(jwt: DecodedJsonWebToken) {
+function validateHeader(jwt: DecodedJsonWebToken, options?: ValidateOptions) {
   const {
     decoded: {
       header: { typ, alg, kid },
     },
   } = jwt
-  if (typ !== "JWT")
+  if (typ !== "JWT" && !options?.ignoreHeaderType)
     throw new Problem({
       title: "JWT Header Validation Error",
       detail: `Invalid JWT type: ${typ}`,
