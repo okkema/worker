@@ -206,7 +206,7 @@ export const JWT = {
     issuer: string,
     options?: ValidateOptions,
   ): Promise<void> {
-    validateHeader(jwt)
+    validateHeader(jwt, options)
     validatePayload(jwt, audience, issuer, options)
     await validateSignature(jwt, options)
   },
