@@ -4,19 +4,24 @@ import { JWK } from "./jwk"
 import { base64url } from "rfc4648"
 import { RSA } from "../crypto"
 
+type JsonWebTokenHeader = {
+  alg: string
+  typ: string
+  kid: string
+}
+
+type JsonWebTokenPayload = {
+  iss: string
+  aud: string[] | string
+  exp: number
+  sub?: string
+  iat?: number
+  scope?: string
+}
+
 export type JsonWebToken = {
-  header: {
-    alg: string
-    typ: string
-    kid: string
-  }
-  payload: {
-    iss: string
-    sub: string
-    aud: string[] | string
-    exp: number
-    scope?: string
-  }
+  header: JsonWebTokenHeader
+  payload: JsonWebTokenPayload
   signature: Uint8Array
 }
 
@@ -199,6 +204,40 @@ export const JWT = {
         status: 401,
       })
     return token
+  },
+  async sign(
+    pemKey: string,
+    keyId: string,
+    audience: string,
+    issuer: string,
+    scope?: string,
+  ): Promise<string> {
+    const header: JsonWebTokenHeader = {
+      alg: "RS256",
+      typ: "JWT",
+      kid: keyId,
+    }
+    const iat = Math.floor(Date.now() / 1000)
+    const exp = iat + 3600
+    const payload: JsonWebTokenPayload = {
+      aud: audience,
+      exp,
+      iat,
+      iss: issuer,
+    }
+    if (scope) payload.scope = scope
+    const key = await RSA.import(pemKey, "pkcs8", "sign")
+    const encoder = new TextEncoder()
+    const value =
+      base64url.stringify(encoder.encode(JSON.stringify(header)), {
+        pad: false,
+      }) +
+      "." +
+      base64url.stringify(encoder.encode(JSON.stringify(payload)), {
+        pad: false,
+      })
+    const signature = await RSA.sign(key, value, true)
+    return `${value}.${signature}`
   },
   async validate(
     jwt: DecodedJsonWebToken,

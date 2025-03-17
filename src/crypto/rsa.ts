@@ -1,4 +1,4 @@
-import { base64 } from "rfc4648"
+import { base64, base64url } from "rfc4648"
 import { Problem } from "../core"
 import type { JsonWebKey } from "@cloudflare/workers-types"
 
@@ -17,8 +17,15 @@ export const RSA = {
           title: "RSA Error",
           detail: "PEM key not in string format",
         })
-      const header = "-----BEGIN RSA PRIVATE KEY-----"
-      const footer = "-----END RSA PRIVATE KEY-----"
+      if (key.includes("\n")) key = key.replace(/\n/g, "")
+      let header
+      if (key.startsWith("-----BEGIN RSA PRIVATE KEY-----"))
+        header = "-----BEGIN RSA PRIVATE KEY-----"
+      else header = "-----BEGIN PRIVATE KEY-----"
+      let footer
+      if (key.endsWith("-----END RSA PRIVATE KEY-----"))
+        footer = "-----END RSA PRIVATE KEY-----"
+      else footer = "-----END PRIVATE KEY-----"
       const pem = key.substring(header.length, key.length - footer.length)
       keyData = base64.parse(pem, { loose: true })
     } else keyData = key
@@ -33,7 +40,7 @@ export const RSA = {
       [uses],
     )
   },
-  async sign(key: CryptoKey, string: string) {
+  async sign(key: CryptoKey, string: string, url?: boolean) {
     const buffer = await crypto.subtle.sign(
       {
         name: this.ALGORITHM,
@@ -42,6 +49,7 @@ export const RSA = {
       key,
       new TextEncoder().encode(string),
     )
+    if (url) return base64url.stringify(new Uint8Array(buffer), { pad: false })
     return base64.stringify(new Uint8Array(buffer))
   },
   async verify(key: CryptoKey, buffer: Uint8Array, signature: string) {

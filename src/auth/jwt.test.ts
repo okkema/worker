@@ -2,6 +2,10 @@ import { JWT } from "./jwt"
 import { JWK } from "./jwk"
 import { Problem } from "../core"
 
+const KEYID = "keyid123"
+const AUDIENCE = "https://audience"
+const ISSUER = "https://issuer/"
+
 jest.mock("./jwk", () => ({
   JWK: {
     fetch: jest.fn(),
@@ -14,13 +18,13 @@ const createJWT = () => ({
   decoded: {
     header: {
       alg: "RS256",
-      kid: "123",
+      kid: KEYID,
       typ: "JWT",
     },
     payload: {
-      aud: ["https://audience"],
+      aud: [AUDIENCE],
       exp: Date.now() / 1000 + 1000,
-      iss: "https://issuer/",
+      iss: ISSUER,
       sub: "subject",
     },
     signature: new Uint8Array(),
@@ -33,6 +37,27 @@ const createJWT = () => ({
 })
 
 describe("JWT", () => {
+  describe("sign", () => {
+    it("creates and signs a valid token", async () => {
+      const key = await crypto.subtle.generateKey(
+        {
+          name: "RSASSA-PKCS1-v1_5",
+          modulusLength: 4096,
+          publicExponent: new Uint8Array([1, 0, 1]),
+          hash: "SHA-256",
+        },
+        true,
+        ["sign"],
+      )
+      const buffer = await crypto.subtle.exportKey("pkcs8", key.privateKey)
+      const pemKey =
+        "-----BEGIN PRIVATE KEY-----\n" +
+        btoa(String.fromCharCode.apply(null, new Uint8Array(buffer))) +
+        "\n-----END PRIVATE KEY-----"
+      const result = await JWT.sign(pemKey, KEYID, AUDIENCE, ISSUER)
+      expect(result).toBeDefined()
+    })
+  })
   describe("decode", () => {
     it("decodes a valid token", () => {
       const token =
