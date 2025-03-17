@@ -37,6 +37,7 @@ export function Oauth(credentials: string) {
         scope,
       )
       const response = await fetch(token_uri, {
+        method: "POST",
         body: new URLSearchParams({
           grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
           assertion,
