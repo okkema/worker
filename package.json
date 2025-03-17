@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist",
@@ -89,7 +89,6 @@
     "@cloudflare/workers-types": "^4.20240903.0",
     "@sentry/cloudflare": "^8.28.0",
     "chanfana": "^2.0.4",
-    "googleapis": "^144.0.0",
     "hono": "^4.5.11",
     "npm-run-all": "^4.1.5",
     "rfc4648": "^1.5.2",

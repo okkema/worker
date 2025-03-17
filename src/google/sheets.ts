@@ -1,27 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { google } from "googleapis"
+import { Oauth } from "./oauth"
 
-const scopes = ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+const scope = "https://www.googleapis.com/auth/spreadsheets.readonly"
 
 type GoogleSheets = {
   get(spreadsheetId: string, range: string): Promise<any[][]>
   parse<T>(spreadsheetId: string, range: string): Promise<T[]>
 }
 
+type GetResponse = {
+  range: string
+  majorDimension: string
+  values: any[]
+}
+
 export function GoogleSheets(credentials: string): GoogleSheets {
-  const keys = JSON.parse(credentials)
-  const auth = new google.auth.JWT({
-    email: keys.client_email,
-    key: keys.private_key,
-    scopes,
-  })
-  const client = google.sheets({ version: "v4", auth })
+  const oauth = Oauth(credentials)
   async function get(spreadsheetId: string, range: string) {
-    const response = await client.spreadsheets.values.get({
-      spreadsheetId,
-      range,
-    })
-    return response.data.values
+    const token = await oauth.token(scope)
+    const response = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    )
+    const body = await response.json<GetResponse>()
+    return body.values
   }
   return {
     get,
