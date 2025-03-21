@@ -2,7 +2,7 @@
 import { KVNamespace } from "@cloudflare/workers-types"
 import { Oauth } from "./oauth"
 
-const scope = "https://www.googleapis.com/auth/spreadsheets.readonly"
+const scope = "https://www.googleapis.com/auth/spreadsheets"
 
 export type GoogleSheetsRow = {
   $range: string
