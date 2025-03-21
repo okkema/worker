@@ -1,3 +1,4 @@
+import { KVNamespace } from "@cloudflare/workers-types"
 import { JWT } from "../auth"
 
 type ServiceAccountCredentials = {
@@ -20,7 +21,9 @@ type TokenResponse = {
   token_type: string
 }
 
-export function Oauth(credentials: string) {
+const AccessTokenKey = "okkema/worker/google/oauth/access_token"
+
+export function Oauth(credentials: string, kv?: KVNamespace) {
   const {
     client_email,
     private_key,
@@ -29,6 +32,10 @@ export function Oauth(credentials: string) {
   }: ServiceAccountCredentials = JSON.parse(credentials)
   return {
     async token(scope: string) {
+      if (kv) {
+        const token = await kv.get(AccessTokenKey)
+        if (token) return token
+      }
       const assertion = await JWT.sign(
         private_key,
         private_key_id,
@@ -43,8 +50,13 @@ export function Oauth(credentials: string) {
           assertion,
         }),
       })
-      const body = await response.json<TokenResponse>()
-      return body.access_token
+      const { access_token, expires_in } = await response.json<TokenResponse>()
+      if (kv) {
+        await kv.put(AccessTokenKey, access_token, {
+          expirationTtl: expires_in,
+        })
+      }
+      return access_token
     },
   }
 }
