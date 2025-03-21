@@ -42,7 +42,8 @@ function getRange(range: string, index: number) {
   const row = parts[0].match(/\d+/)
   const startRow = row != null ? +row[0] : 0
   const startCol = parts[0].replace(/^\d+/g, "")
-  return `${startCol}${startRow + index}`
+  const endCol = parts[1].replace(/^\d+/g, "")
+  return `${startCol}${startRow + index}:${endCol}`
 }
 
 export function GoogleSheets(
