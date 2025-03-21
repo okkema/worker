@@ -40,7 +40,7 @@ type UpdateResponse = {
 function getRange(range: string, index: number) {
   const parts = range.split(":")
   const row = parts[0].match(/\d+/)
-  const startRow = row != null ? +row[0] : 0
+  const startRow = row != null ? +row[0] + 1 : 2 // first row of range is assumed to be column names
   const startCol = parts[0].replace(/^\d+/g, "")
   const endCol = parts[1].replace(/^\d+/g, "")
   return `${startCol}${startRow + index}:${endCol}`
