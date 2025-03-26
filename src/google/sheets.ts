@@ -17,7 +17,6 @@ type GoogleSheets = {
   ): Promise<T[]>
   update<T extends GoogleSheetsRow>(
     spreadsheetId: string,
-    range: string,
     ...values: T[]
   ): Promise<boolean>
 }
@@ -79,7 +78,7 @@ export function GoogleSheets(
       }
       return values satisfies T[]
     },
-    async update(spreadsheetId, range, ...values) {
+    async update(spreadsheetId, ...values) {
       const token = await oauth.token(scope)
       const response = await fetch(
         `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchUpdate`,
@@ -87,6 +86,7 @@ export function GoogleSheets(
           method: "POST",
           headers: { Authorization: `Bearer ${token}` },
           body: JSON.stringify({
+            valueInputOption: "RAW",
             data: values.map(function (value) {
               const order = value.$order.split("|")
               const result = []
@@ -96,7 +96,7 @@ export function GoogleSheets(
               return {
                 range: value.$range,
                 majorDimension: "ROWS",
-                values: result,
+                values: [result],
               }
             }),
           }),
