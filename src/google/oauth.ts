@@ -16,9 +16,12 @@ type ServiceAccountCredentials = {
 }
 
 type TokenResponse = {
-  access_token: string
-  expires_in: number
-  token_type: string
+  access_token?: string
+  expires_in?: number
+  token_type?: string
+  id_token?: string
+  error?: string
+  error_description?: string
 }
 
 const AccessTokenKey = "okkema/worker/google/oauth/access_token"
@@ -50,13 +53,23 @@ export function Oauth(credentials: string, kv?: KVNamespace) {
           assertion,
         }),
       })
-      const { access_token, expires_in } = await response.json<TokenResponse>()
-      if (kv) {
-        await kv.put(AccessTokenKey, access_token, {
-          expirationTtl: expires_in,
-        })
-      }
-      return access_token
+      const body = await response.json<TokenResponse>()
+      const { access_token, expires_in, id_token, error, error_description } =
+        body
+      if (access_token) {
+        if (kv) {
+          await kv.put(AccessTokenKey, access_token, {
+            expirationTtl: expires_in,
+          })
+        }
+        return access_token
+      } else if (id_token) return id_token
+      else
+        throw new Error(
+          `${error ?? "No tokens were returned"}: ${
+            error_description ?? response.status
+          }`,
+        )
     },
   }
 }
