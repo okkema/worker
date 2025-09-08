@@ -1,18 +1,25 @@
 import type { Context, Next } from "hono"
-import { type JsonWebToken, JWT } from "../auth"
-import { Problem } from "../core"
-/**
- * Auth Middleware Bindings
- */
-export type AuthBindings = {
-  OAUTH_AUDIENCE: string
-  OAUTH_TENANT: string
-}
-/**
- * Auth Middleware Variables
- */
-export type AuthVariables = {
-  jwt: JsonWebToken
+import { getCookie } from "hono/cookie"
+import { JWT, OAuthResponse } from "../../auth"
+import { Problem } from "../../core"
+import { AuthBindings, AuthVariables } from "."
+
+export async function login(
+  c: Context<{ Bindings: AuthBindings; Variables: AuthVariables }>,
+  next: Next,
+) {
+  if (!c.req.header("Authorization")) {
+    const cookie = getCookie(c, "auth")
+    if (!cookie) return c.redirect("/auth/login")
+    const json: OAuthResponse = JSON.parse(cookie)
+    c.req.raw = new Request(c.req.raw, {
+      headers: {
+        ...c.req.raw.headers,
+        Authorization: `${json.token_type} ${json.access_token}`,
+      },
+    })
+  }
+  await next()
 }
 
 export async function authenticate(
