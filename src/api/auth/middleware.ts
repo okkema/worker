@@ -1,4 +1,4 @@
-import type { Context, Next } from "hono"
+import { type Context, type Next } from "hono"
 import { getCookie } from "hono/cookie"
 import { JWT, OAuthResponse } from "../../auth"
 import { Problem } from "../../core"
@@ -12,12 +12,10 @@ export async function login(
     const cookie = getCookie(c, "auth")
     if (!cookie) return c.redirect("/auth/login")
     const json: OAuthResponse = JSON.parse(cookie)
-    c.req.raw = new Request(c.req.raw, {
-      headers: {
-        ...c.req.raw.headers,
-        Authorization: `${json.token_type} ${json.access_token}`,
-      },
-    })
+    c.req.raw.headers.set(
+      "Authorization",
+      `${json.token_type} ${json.access_token}`,
+    )
   }
   await next()
 }
