@@ -12,10 +12,12 @@ export async function login(
     const cookie = getCookie(c, "auth")
     if (!cookie) return c.redirect("/auth/login")
     const json: OAuthResponse = JSON.parse(cookie)
-    c.req.raw.headers.set(
+    const request = new Request(c.req.raw)
+    request.headers.set(
       "Authorization",
       `${json.token_type} ${json.access_token}`,
     )
+    c.req.raw = request
   }
   await next()
 }
