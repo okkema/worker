@@ -3,6 +3,7 @@ import { type AuthBindings, type AuthVariables } from "."
 import { deleteCookie, getCookie, setCookie } from "hono/cookie"
 import { type OAuthResponse } from "../../auth"
 import { Problem } from "../../core"
+import { base64url } from "rfc4648"
 
 export async function login(
   c: Context<{ Bindings: AuthBindings; Variables: AuthVariables }>,
@@ -14,6 +15,8 @@ export async function login(
     scope: `openid profile email offline_access ${c.env.OAUTH_SCOPE}`,
     audience: c.env.OAUTH_AUDIENCE,
   })
+  const state = c.req.query("state")
+  if (state) params.append("state", state)
   let origin = c.env.OAUTH_TENANT
   if (!origin.startsWith("https://")) origin = `https://${origin}`
   return c.redirect(`${origin}/authorize?${params}`)
@@ -58,6 +61,11 @@ export async function loginCallback(
     secure: true,
     expires,
   })
+  const state = c.req.query("state")
+  if (state) {
+    const json = JSON.parse(new TextDecoder().decode(base64url.parse(state)))
+    if (json.redirect) return c.redirect(json.redirect)
+  }
   return c.redirect(url.origin)
 }
 

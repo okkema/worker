@@ -1,5 +1,6 @@
 import { type Context, type Next } from "hono"
 import { getCookie } from "hono/cookie"
+import { base64url } from "rfc4648"
 import { JWT, OAuthResponse } from "../../auth"
 import { Problem } from "../../core"
 import { AuthBindings, AuthVariables } from "."
@@ -10,7 +11,15 @@ export async function login(
 ) {
   if (!c.req.header("Authorization")) {
     const cookie = getCookie(c, "auth")
-    if (!cookie) return c.redirect("/auth/login")
+    if (!cookie) {
+      const state = new TextEncoder().encode(
+        JSON.stringify({ redirect: c.req.url }),
+      )
+      const params = new URLSearchParams({
+        state: base64url.stringify(state),
+      })
+      return c.redirect(`/auth/login?${params}`)
+    }
     const json: OAuthResponse = JSON.parse(cookie)
     const request = new Request(c.req.raw)
     request.headers.set(
