@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import { Problem } from "../core"
 import { JWK } from "./jwk"
 import { base64url } from "rfc4648"

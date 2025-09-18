@@ -8,6 +8,7 @@ export function sanitize(
 ): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(obj)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .filter(([_, value]) => !(value === null || value === undefined))
       .map(([key, value]) => [
         key,

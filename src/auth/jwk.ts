@@ -26,7 +26,7 @@ export const JWK = {
         title: "JWK Error",
         detail: `Error fetching JWKS: ${resp.status}`,
       })
-    return resp.json()
+    return resp.json<{ keys: JsonWebKey[] }>()
   },
   url(issuer): string {
     const url = new URL(issuer)

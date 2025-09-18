@@ -64,6 +64,7 @@ export function API<
       app.use("*", authenticate)
     }
   }
+  // @ts-expect-error 'Bindings' could be instantiated with an arbitrary type which could be unrelated to 'ErrorBindings'.
   app.onError(error)
   return app as Hono<{ Bindings: Bindings; Variables: Variables }>
 }
