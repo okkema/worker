@@ -11,9 +11,7 @@ export function SentryWorker<Environment extends SentryEnvironment>(
   return withSentry(function (env: Environment) {
     return {
       dsn: env.SENTRY_DSN,
-      _experiments: {
-        enableLogs: true,
-      },
+      enableLogs: true,
       integrations: [consoleLoggingIntegration()],
     }
   }, handler) as ExportedHandler<Environment>
