@@ -32,6 +32,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: ${{ github.ref }}
+          draft: true
           body: |
             ${{ steps.commit-message.outputs.body }}
           prerelease: ${{ steps.version.outputs.prerelease == 'true' && true || false }}
