@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "4.2.0",
+  "version": "4.3.1",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist",
@@ -40,6 +40,10 @@
     "./utils": {
       "types": "./dist/utils/index.d.ts",
       "default": "./dist/utils/index.js"
+    },
+    "./web": {
+      "types": "./dist/web/index.d.ts",
+      "default": "./dist/web/index.js"
     }
   },
   "scripts": {
@@ -76,12 +80,15 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "^12.6.8",
     "@cloudflare/workers-types": "^4.20250918.0",
     "@sentry/cloudflare": "^10.12.0",
+    "astro": "^5.13.9",
     "chanfana": "^2.8.2",
     "hono": "^4.9.7",
     "npm-run-all": "^4.1.5",
     "rfc4648": "^1.5.4",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "zod": "^3.25.76"
   }
 }

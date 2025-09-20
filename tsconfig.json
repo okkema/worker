@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "src",
     "outDir": "dist",
     "module": "ESNext",
     "target": "ESNext",
@@ -9,7 +10,7 @@
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
     "lib": ["esnext"],
-    "types": ["@cloudflare/workers-types"]
+    "types": ["@cloudflare/workers-types", "astro/client"]
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.test.*"]

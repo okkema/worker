@@ -30,6 +30,7 @@ export const RSA = {
       keyData = base64.parse(pem, { loose: true })
     } else keyData = key
     return crypto.subtle.importKey(
+      // @ts-expect-error Type '"jwk"' is not assignable to type '"pkcs8" | "raw" | "spki"'.ts(2769)
       format,
       keyData,
       {
@@ -56,6 +57,7 @@ export const RSA = {
     return crypto.subtle.verify(
       this.ALGORITHM,
       key,
+      // @ts-expect-error Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLengthts(2345)
       buffer,
       new TextEncoder().encode(signature),
     )
