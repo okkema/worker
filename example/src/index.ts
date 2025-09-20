@@ -1,15 +1,19 @@
-import { API, Problem, Worker } from "@okkema/worker/dist/"
+import { Problem } from "@okkema/worker/core"
+import { API } from "@okkema/worker/api"
+import { SentryWorker } from "@okkema/worker/sentry"
 
-export default Worker({
-  async fetch(req, env, ctx) {
-    const api = API()
-    api.get("/error", function () {
-      throw new Problem({ detail: "detail", title: "title" })
-    })
-    api.get("/health", function (c) {
-      return c.text("success")
-    })
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return api.fetch(req as any, env, ctx) as any
-  },
+const api = API()
+api.get("/error", function () {
+  throw new Problem({ 
+    title: "Simulated Error",
+    detail: "An error occurred while invoking the endpoint.", 
+  })
+})
+api.get("/health", function (c) {
+  return c.text("success")
+})
+
+export default SentryWorker({
+  // @ts-expect-error Type 'Request<unknown, IncomingRequestCfProperties<unknown>>' is missing the following properties from type 'Request<unknown, CfProperties<unknown>>': cache, credentials, destination, mode, and 2 more.
+  fetch: api.fetch,
 })

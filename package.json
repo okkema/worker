@@ -21,6 +21,10 @@
       "types": "./dist/auth/index.d.ts",
       "default": "./dist/auth/index.js"
     },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
     "./crypto": {
       "types": "./dist/crypto/index.d.ts",
       "default": "./dist/crypto/index.js"

@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "description": "Okkema Labs Worker Example",
   "scripts": {
-    "prebuild": "cd .. && npm run build",
-    "build": "esbuild src/index.ts --bundle --outdir=dist --platform=node --format=esm"
+    "build": "wrangler deploy src/index.ts --dry-run --outdir dist",
+    "start": "wrangler dev"
   },
   "dependencies": {
-    "@cloudflare/workers-types": "^4.20240903.0",
-    "@okkema/worker": "file:../okkema-worker-3.3.10.tgz",
-    "wrangler": "^3.75.0"
+    "@cloudflare/workers-types": "^4.20250920.0",
+    "@okkema/worker": "../src",
+    "wrangler": "^4.38.0"
   }
 }
