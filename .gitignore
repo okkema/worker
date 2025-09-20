@@ -6,3 +6,4 @@ tmp
 .terraform
 coverage
 example/package-lock.json
+tsconfig.tsbuildinfo
