@@ -19,16 +19,16 @@ module "secrets" {
 
 module "worker" {
   source  = "app.terraform.io/okkema/worker/cloudflare"
-  version = "~> 0.14"
+  version = "~> 1.0"
 
   account_id          = var.cloudflare_account_id
   zone_id             = var.cloudflare_zone_id
   name                = var.github_repository
-  content             = file(abspath("${path.module}/../example/dist/index.js"))
+  content_file        = abspath("${path.module}/../example/dist/index.js")
   hostnames           = [var.github_repository]
   compatibility_flags = ["nodejs_compat_v2"]
   secrets = [
-    { name = "SENTRY_DSN", value = module.sentry.dsn },
+    { name = "SENTRY_DSN", text = module.sentry.dsn },
   ]
 }
 
