@@ -26,14 +26,14 @@ jobs:
           echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
         id: version
       - name: Create release draft
-        run: gh release create $TAG --title $TITLE --draft --generate-notes $PRERELEASE
+        run: gh release create $TAG --title $TITLE --draft --generate-notes --prerelease=$PRERELEASE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
           TITLE: ${{ github.ref_name }}
-          PRERELEASE: ${{ steps.version.outputs.prerelease == 'true' && '--prerelease' || '' }}
+          PRERELEASE: ${{ steps.version.outputs.prerelease }}
       - name: Publish release
-        run: gh release edit $TAG --draft false 
+        run: gh release edit $TAG --draft=false 
         if: ${{ steps.version.outputs.prerelease == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
