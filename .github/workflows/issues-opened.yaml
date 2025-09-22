@@ -6,6 +6,8 @@ jobs:
   project:
     name: Add issue to project
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Add issue to project
         uses: actions/add-to-project@v1.0.2
