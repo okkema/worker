@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "4.4.3",
+  "version": "4.5.0",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist",
@@ -36,10 +36,6 @@
     "./sentry": {
       "types": "./dist/sentry/index.d.ts",
       "default": "./dist/sentry/index.js"
-    },
-    "./utils": {
-      "types": "./dist/utils/index.d.ts",
-      "default": "./dist/utils/index.js"
     },
     "./web": {
       "types": "./dist/web/index.d.ts",

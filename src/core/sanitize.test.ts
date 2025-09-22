@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { sanitize } from "./sanitze"
+import { sanitize } from "./sanitize"
 
 describe("sanitize", () => {
   it("removes null and undefined values", () => {

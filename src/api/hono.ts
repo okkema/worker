@@ -4,7 +4,6 @@ import {
   authenticate,
   error,
   type ErrorBindings,
-  type ErrorVariables,
 } from "./"
 import { login, loginCallback, logout, logoutCallback } from "./auth/routes"
 import { type AuthBindings, type AuthVariables } from "./auth"
@@ -22,7 +21,7 @@ type APIInit = {
 
 type APIBindings = AuthBindings & ErrorBindings
 
-type APIVariables = AuthVariables & ErrorVariables
+type APIVariables = AuthVariables
 
 export function API<
   Bindings extends APIBindings,

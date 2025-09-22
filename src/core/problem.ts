@@ -1,4 +1,4 @@
-import { sanitize } from "../utils"
+import { sanitize } from "./sanitize"
 
 /**
  * @typedef {object} ProblemInit
