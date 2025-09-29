@@ -53,13 +53,13 @@ export const RSA = {
     if (url) return base64url.stringify(new Uint8Array(buffer), { pad: false })
     return base64.stringify(new Uint8Array(buffer))
   },
-  async verify(key: CryptoKey, buffer: Uint8Array, signature: string) {
+  async verify(key: CryptoKey, buffer: Uint8Array, payload: string) {
     return crypto.subtle.verify(
       this.ALGORITHM,
       key,
       // @ts-expect-error Type 'SharedArrayBuffer' is missing the following properties from type 'ArrayBuffer': resizable, resize, detached, transfer, transferToFixedLengthts(2345)
       buffer,
-      new TextEncoder().encode(signature),
+      new TextEncoder().encode(payload),
     )
   },
   async digest(string: string) {
