@@ -10,7 +10,7 @@ import { type AuthBindings, type AuthVariables } from "./auth"
 
 type APIInit = {
   auth?: {
-    tenant: string
+    tenant?: string
     authorizationCode?: boolean
     clientCredentials?: boolean
     skipAuthentication?: boolean
