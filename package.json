@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "4.6.2",
+  "version": "4.6.3",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist",
@@ -78,7 +78,7 @@
   "dependencies": {
     "@astrojs/cloudflare": "^12.6.8",
     "@cloudflare/workers-types": "^4.20250918.0",
-    "@sentry/cloudflare": "^10.12.0",
+    "@sentry/cloudflare": "^10.17.0",
     "astro": "^5.13.9",
     "chanfana": "^2.8.2",
     "hono": "^4.9.7",
