@@ -1,6 +1,6 @@
 {
   "name": "@okkema/worker",
-  "version": "4.7.0",
+  "version": "4.7.1",
   "description": "Cloudflare Workers Toolkit",
   "files": [
     "dist",
