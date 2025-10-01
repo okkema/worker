@@ -1,21 +1,15 @@
 import { Context } from "hono"
 import { Problem } from "../core"
 
-/**
- * Error Middleware Bindings
- */
-export type ErrorBindings = {
-  DEBUG?: string
-}
-
 export async function error(
   error: Error,
-  c: Context<{ Bindings: ErrorBindings }>,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  c: Context,
 ) {
-  console.error(error)
-  if (!c.env.DEBUG) return c.text("Internal Server Error", { status: 500 })
+  console.error("Unhandled error %s", error.name)
+  if (error.cause) console.error("Root cause: %s", error.cause)
+  console.error(error.message)
+  if (error.stack) console.error(error.stack)
   if (error instanceof Problem) return error.response
-  else
-    return new Problem({ title: "Unknown Error", detail: error.message })
-      .response
+  else throw error
 }

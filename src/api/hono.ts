@@ -3,7 +3,6 @@ import { Hono } from "hono"
 import {
   authenticate,
   error,
-  type ErrorBindings,
 } from "./"
 import { login, loginCallback, logout, logoutCallback } from "./auth/routes"
 import { type AuthBindings, type AuthVariables } from "./auth"
@@ -19,7 +18,7 @@ type APIInit = {
   options?: RouterOptions
 }
 
-type APIBindings = AuthBindings & ErrorBindings
+type APIBindings = AuthBindings
 
 type APIVariables = AuthVariables
 
@@ -63,7 +62,6 @@ export function API<
       app.use("*", authenticate)
     }
   }
-  // @ts-expect-error 'Bindings' could be instantiated with an arbitrary type which could be unrelated to 'ErrorBindings'.
   app.onError(error)
   return app as Hono<{ Bindings: Bindings; Variables: Variables }>
 }
