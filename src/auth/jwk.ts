@@ -28,8 +28,14 @@ export const JWK = {
       })
     return resp.json<{ keys: JsonWebKey[] }>()
   },
-  url(issuer): string {
+  url(issuer: string): string {
     const url = new URL(issuer)
+    if (url.protocol !== "https:") {
+      throw new Problem({
+        title: "JWK Error",
+        detail: "JWK issuer must use HTTPS",
+      })
+    }
     if (!url.pathname.endsWith("/")) url.pathname += "/"
     url.pathname += ".well-known/jwks.json"
     return url.href

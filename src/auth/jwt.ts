@@ -186,16 +186,14 @@ export const JWT = {
         detail: "Missing 'Authorization' header.",
         status: 401,
       })
-    let type, token
-    try {
-      ;[type, token] = header.split(" ")
-    } catch {
+    const parts = header.split(" ", 2)
+    if (parts.length !== 2)
       throw new Problem({
         title: "JWT Error",
         detail: "Unable to parse 'Authorization' header.",
         status: 401,
       })
-    }
+    const [type, token] = parts
     if (type !== "Bearer")
       throw new Problem({
         title: "JWT Error",
